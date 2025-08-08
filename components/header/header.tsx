@@ -2,13 +2,36 @@
 
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "@/app/globals.css";
 import { poppins } from "@/fonts/font";
 import Image from "next/image";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const [show, setShow] = useState(false);
+  const [auth, setAuth] = useState(false);
+  const supabase = createClient();
+  const router = useRouter();
+
+  useEffect(() => {
+    async function checkUser() {
+      const { data, error } = await supabase.auth.getUser();
+      if (error || !data?.user) {
+        setAuth(false);
+      } else {
+        setAuth(true);
+      }
+    }
+
+    checkUser();
+  }, []);
+
+  const logout = async () => {
+    await supabase.auth.signOut();
+    router.push("/auth/login");
+  };
   return (
     <>
       <nav className="fixed w-full z-50 bg-black/90 backdrop-blur-sm shadow-black/30 shadow-lg header">
@@ -27,6 +50,21 @@ export default function Header() {
               <Link href={"/gallery"} className="hover:text-white duration-500">
                 Gallery
               </Link>
+              {auth ? (
+                <button
+                  onClick={logout}
+                  className="hover:text-white duration-500"
+                >
+                  Logout
+                </button>
+              ) : (
+                <Link
+                  href={"/auth/login"}
+                  className="hover:text-white duration-500"
+                >
+                  SignIn
+                </Link>
+              )}
             </div>
             <div className="md:hidden">
               {show ? (
@@ -55,6 +93,26 @@ export default function Header() {
           >
             Book Appointment
           </Link>
+          <Link
+            href={"/gallery"}
+            className={`${poppins.className} hover:text-white w-11/12 mx-auto border-b border-gray-400 duration-500`}
+          >
+            Gallery
+          </Link>
+          {auth ? (
+            <button
+              onClick={logout}
+            >
+              Logout
+            </button>
+          ) : (
+            <Link
+              href={"auth/login"}
+              className={`${poppins.className} hover:text-white w-11/12 mx-auto border-b border-gray-400 text-start duration-500`}
+            >
+              Signin
+            </Link>
+          )}
         </div>
         <div className="text-white mb-28 flex justify-center items-center">
           <Link href={"/"}>
