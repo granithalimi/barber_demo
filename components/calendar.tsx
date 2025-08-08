@@ -7,6 +7,9 @@ import "react-calendar/dist/Calendar.css";
 export default function Ccalendar() {
   const [date, setDate] = useState<Date>(new Date());
 
+  const maxDate = new Date();
+  maxDate.setMonth(maxDate.getMonth() + 2);
+
   useEffect(() => {
     const supabase = createClient()
     async function fetchData(){
@@ -38,6 +41,7 @@ export default function Ccalendar() {
       <form>
         <Calendar
           minDate={new Date()}
+          maxDate={maxDate}
           onChange={(e) => {
             if(e instanceof Date){
               setDate(e)
