@@ -26,7 +26,7 @@ export default function Header() {
     }
 
     checkUser();
-  }, []);
+  });
 
   const logout = async () => {
     await supabase.auth.signOut();

@@ -1,0 +1,87 @@
+"use client";
+import { times } from "@/lib/helpers";
+import { createClient } from "@/lib/supabase/client";
+import { useEffect, useState } from "react";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+
+export default function Acalendar() {
+  const [date, setDate] = useState<Date>(new Date());
+  const [time, setTime] = useState<string[]>([]);
+
+  const maxDate = new Date();
+  maxDate.setMonth(maxDate.getMonth() + 2);
+
+  const handleSubmit = () => {
+    console.log("submitted");
+  };
+
+  useEffect(() => {
+    setTime(times);
+    const supabase = createClient();
+    async function fetchData() {
+      const { data, error } = await supabase.from("appointments").select("*");
+      if (data) console.log(data);
+      if (error) console.log(error);
+    }
+
+    fetchData();
+  }, [date]);
+  return (
+    <div className="mt-10 flex flex-col items-center">
+      <div>
+        <div className="flex items-center gap-1">
+          <div className="p-2 bg-transparent border border-white rounded-full"></div>
+          <h1>Not Booked</h1>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="p-2 bg-gray-500 rounded-full"></div>
+          <h1>Booked, pending</h1>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="p-2 bg-red-500 rounded-full"></div>
+          <h1>Booked, accepted</h1>
+        </div>
+      </div>
+
+      {/* Calendar */}
+      <form onSubmit={handleSubmit}>
+        <Calendar
+          minDate={new Date()}
+          maxDate={maxDate}
+          onChange={(e) => {
+            if (e instanceof Date) {
+              setDate(e);
+            }
+          }}
+          className="rounded-lg p-3 !bg-transparent mt-5 mb-10"
+        />
+        {time && time.length > 0 && (
+          <div className="grid grid-cols-3 gap-3">
+            {time.map((t, ind) => (
+              <button
+                className="py-1 border border-white rounded-lg 
+                hover:scale-110 hover:bg-white hover:text-black hover:font-bold 
+                focus:scale-110 focus:bg-white focus:text-black focus:font-bold 
+                active:scale-110 active:bg-white active:text-black active:font-bold 
+                duration-300"
+                type="button"
+                key={ind}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+        )}
+        <div className="flex flex-col items-center gap-3 my-10">
+          <button
+            className="bg-red-500 px-3 py-1 rounded-lg font-bold hover:bg-red-400 duration-300"
+            type="submit"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}

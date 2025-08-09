@@ -1,4 +1,5 @@
-import Ccalendar from "@/components/calendar";
+import Acalendar from "@/components/acalendar";
+import Footer from "@/components/footer";
 import Header from "@/components/header/header";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
@@ -16,7 +17,8 @@ export default async function Page() {
       <div className="w-full h-20 bg-transparent"></div>
       <h1 className="text-center">welcome in the booking system</h1>
 
-      <Ccalendar />
+      <Acalendar />
+      <Footer />
     </main>
   );
 }

@@ -1,4 +1,5 @@
-import Ccalendar from "@/components/calendar";
+import Footer from "@/components/footer";
+import Gcalendar from "@/components/gcalendar";
 import Header from "@/components/header/header";
 import { poppins } from "@/fonts/font";
 import { createClient } from "@/lib/supabase/server";
@@ -36,7 +37,8 @@ export default async function Page() {
         </h1>
       </div>
 
-      <Ccalendar />
+      <Gcalendar />
+      <Footer />
     </main>
   );
 }
