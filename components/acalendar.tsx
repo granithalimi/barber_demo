@@ -1,5 +1,5 @@
 "use client";
-import { times } from "@/lib/helpers";
+import { static_times } from "@/lib/helpers";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
@@ -11,8 +11,10 @@ type Time = {
 };
 
 export default function Acalendar() {
+  const [times, setTimes] = useState<Time[] | undefined>();
+
   const [date, setDate] = useState<Date>(new Date());
-  const [time, setTime] = useState<Time[] | undefined>();
+  const [time, setTime] = useState<string>("");
 
   const maxDate = new Date();
   maxDate.setMonth(maxDate.getMonth() + 2);
@@ -21,10 +23,14 @@ export default function Acalendar() {
     console.log("submitted");
   };
 
+  const handleButtonClick = (clickedTime: string) => {
+    setTime(clickedTime);
+  };
+
   useEffect(() => {
     const supabase = createClient();
     const fetchingDate = date.toLocaleDateString("en-CA");
-    setTime(times);
+    setTimes(static_times);
     async function fetchData() {
       const { data } = await supabase
         .from("appointments")
@@ -32,7 +38,7 @@ export default function Acalendar() {
         .eq("date", fetchingDate);
       if (data) {
         for (let i = 0; i < data.length; i++) {
-          setTime((prev) =>
+          setTimes((prev) =>
             (prev ?? []).map((obj) =>
               obj.time === data[i].time
                 ? { ...obj, status: data[i].status }
@@ -43,6 +49,7 @@ export default function Acalendar() {
       }
     }
 
+    setTime("")
     fetchData();
   }, [date]);
 
@@ -73,51 +80,45 @@ export default function Acalendar() {
               setDate(e);
             }
           }}
+          tileDisabled={({ date }) => date.getDay() === 0} // 0 = Sunday
           className="rounded-lg p-3 !bg-transparent mt-5 mb-10"
         />
-        {time && time.length > 0 && (
+        {times && times.length > 0 && (
           <div className="grid grid-cols-3 gap-3">
-            {time.map((t, ind) => {
+            {times.map((t, ind) => {
               if (t.status == "pending") {
                 return (
                   <button
-                    className="py-1 border border-white rounded-lg 
-                hover:scale-110 hover:bg-white hover:text-black hover:font-bold 
-                focus:scale-110 focus:bg-white focus:text-black focus:font-bold 
-                active:scale-110 active:bg-white active:text-black active:font-bold 
-                duration-300"
+                    className={`${time == t.time ? "scale-110 bg-white text-black font-bold" : "hover:scale-110 hover:bg-white hover:text-black hover:font-bold"} 
+                    py-1 border border-white rounded-lg duration-300`}
                     type="button"
                     key={ind}
+                    onClick={() => handleButtonClick(t.time)}
                   >
-                    {t.time}
+                    {t.time.slice(0, 5)}
                   </button>
                 );
               } else if (t.status == "booked") {
                 return (
                   <button
-                    className="py-1 rounded-lg bg-gray-400 text-black
-                hover:scale-110 hover:bg-white hover:font-bold 
-                focus:scale-110 focus:bg-white focus:font-bold 
-                active:scale-110 active:bg-white active:font-bold 
-                duration-300"
+                    className={`${time == t.time ? "scale-110 bg-white text-black font-bold" : "hover:scale-110 hover:bg-white hover:text-black hover:font-bold"} 
+                    py-1 rounded-lg bg-gray-400 text-black duration-300`}
                     type="button"
                     key={ind}
+                    onClick={() => handleButtonClick(t.time)}
                   >
-                    {t.time}
+                    {t.time.slice(0, 5)}
                   </button>
                 );
               } else {
                 return (
                   <button
-                    className="py-1 rounded-lg bg-red-500
-                hover:scale-110 hover:bg-white hover:text-black hover:font-bold 
-                focus:scale-110 focus:bg-white focus:text-black focus:font-bold 
-                active:scale-110 active:bg-white active:text-black active:font-bold 
-                duration-300"
+                    onClick={() => alert("This specific time is booked!")}
+                    className="py-1 rounded-lg bg-red-500"
                     type="button"
                     key={ind}
                   >
-                    {t.time}
+                    {t.time.slice(0, 5)}
                   </button>
                 );
               }

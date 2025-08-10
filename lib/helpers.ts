@@ -1,4 +1,4 @@
-export const times = [
+export const static_times = [
   {
     time: "10:00:00",
     status: "pending",
