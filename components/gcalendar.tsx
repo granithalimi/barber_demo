@@ -5,9 +5,14 @@ import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
+type Time = {
+  time: string;
+  status: string;
+};
+
 export default function Gcalendar() {
   const [date, setDate] = useState<Date>(new Date());
-  const [time, setTime] = useState<string[]>([]);
+  const [time, setTime] = useState<Time[] | undefined>();
 
   const maxDate = new Date();
   maxDate.setMonth(maxDate.getMonth() + 2);
@@ -17,16 +22,30 @@ export default function Gcalendar() {
   };
 
   useEffect(() => {
-    setTime(times);
     const supabase = createClient();
+    const fetchingDate = date.toLocaleDateString("en-CA");
+    setTime(times);
     async function fetchData() {
-      const { data, error } = await supabase.from("appointments").select("*");
-      if (data) console.log(data);
-      if (error) console.log(error);
+      const { data } = await supabase
+        .from("appointments")
+        .select("time, status")
+        .eq("date", fetchingDate);
+      if (data) {
+        for (let i = 0; i < data.length; i++) {
+          setTime((prev) =>
+            (prev ?? []).map((obj) =>
+              obj.time === data[i].time
+                ? { ...obj, status: data[i].status }
+                : obj,
+            ),
+          );
+        }
+      }
     }
 
     fetchData();
   }, [date]);
+
   return (
     <div className="mt-10 flex flex-col items-center">
       <div>
@@ -58,19 +77,51 @@ export default function Gcalendar() {
         />
         {time && time.length > 0 && (
           <div className="grid grid-cols-3 gap-3">
-            {time.map((t, ind) => (
-              <button
-                className="py-1 border border-white rounded-lg 
+            {time.map((t, ind) => {
+              if (t.status == "pending") {
+                return (
+                  <button
+                    className="py-1 border border-white rounded-lg 
                 hover:scale-110 hover:bg-white hover:text-black hover:font-bold 
                 focus:scale-110 focus:bg-white focus:text-black focus:font-bold 
                 active:scale-110 active:bg-white active:text-black active:font-bold 
                 duration-300"
-                type="button"
-                key={ind}
-              >
-                {t}
-              </button>
-            ))}
+                    type="button"
+                    key={ind}
+                  >
+                    {t.time}
+                  </button>
+                );
+              } else if (t.status == "booked") {
+                return (
+                  <button
+                    className="py-1 rounded-lg bg-gray-400 text-black
+                hover:scale-110 hover:bg-white hover:font-bold 
+                focus:scale-110 focus:bg-white focus:font-bold 
+                active:scale-110 active:bg-white active:font-bold 
+                duration-300"
+                    type="button"
+                    key={ind}
+                  >
+                    {t.time}
+                  </button>
+                );
+              } else {
+                return (
+                  <button
+                    className="py-1 rounded-lg bg-red-500
+                hover:scale-110 hover:bg-white hover:text-black hover:font-bold 
+                focus:scale-110 focus:bg-white focus:text-black focus:font-bold 
+                active:scale-110 active:bg-white active:text-black active:font-bold 
+                duration-300"
+                    type="button"
+                    key={ind}
+                  >
+                    {t.time}
+                  </button>
+                );
+              }
+            })}
           </div>
         )}
         <div className="flex flex-col items-center gap-3 my-10">
