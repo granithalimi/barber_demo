@@ -13,6 +13,7 @@ type Time = {
 export default function Gcalendar() {
   const [times, setTimes] = useState<Time[] | undefined>();
 
+  // Submiting Data
   const [date, setDate] = useState<Date>(new Date());
   const [time, setTime] = useState<string>("");
 
@@ -163,6 +164,7 @@ export default function Gcalendar() {
             <label>Name:</label>
             <input
               type="text"
+              required
               className="py-1 px-2 rounded-lg bg-transparent border border-white w-full"
             />
           </div>
@@ -170,6 +172,7 @@ export default function Gcalendar() {
             <label>Email:</label>
             <input
               type="email"
+              required
               className="py-1 px-2 rounded-lg bg-transparent border border-white w-full"
             />
           </div>

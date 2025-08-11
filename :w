@@ -49,13 +49,8 @@ export function SignUpForm({
           emailRedirectTo: `${window.location.origin}/protected`,
         },
       });
-      if (data) {
-        const users = await supabase.from("users").insert({
-          user_id: data?.user?.id,
-          name: name,
-          role: "client",
-        });
-        if (users.error) throw error;
+      if(data){
+        console.log(data?.user?.id)
       }
       if (error) throw error;
       router.push("/");
