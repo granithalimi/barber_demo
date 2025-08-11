@@ -16,11 +16,29 @@ export default function Acalendar() {
   const [date, setDate] = useState<Date>(new Date());
   const [time, setTime] = useState<string>("");
 
+  const [showMessage, setShowMessage] = useState<boolean>(false);
+
   const maxDate = new Date();
   maxDate.setMonth(maxDate.getMonth() + 2);
 
-  const handleSubmit = () => {
-    console.log("submitted");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const supabase = createClient();
+    const submitDate = date.toLocaleDateString("en-CA");
+
+    try {
+      const { error } = await supabase.from("appointments").insert({
+        date: submitDate,
+        time: time,
+        status: "booked",
+      });
+      if (error) throw error;
+      setShowMessage(true);
+      setDate(new Date());
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleButtonClick = (clickedTime: string) => {
@@ -49,12 +67,27 @@ export default function Acalendar() {
       }
     }
 
-    setTime("")
+    setTime("");
     fetchData();
   }, [date]);
 
   return (
     <div className="mt-10 flex flex-col items-center">
+      <div
+        className={`${showMessage ? "fixed" : "hidden"} left-1/2 top-1/2 w-2/3 md:w-auto z-50 bg-white rounded-lg flex flex-col items-end gap-3 text-black px-6 py-4 shadow-black/80 shadow-lg`}
+        style={{ transform: "translate(-50%)" }}
+      >
+        <h1 className="text-center">Appointment created successfully!</h1>
+        <button
+          className="bg-black text-white px-3 py-1 rounded-lg hover:bg-gray-900"
+          onClick={() => {
+            setShowMessage(false);
+            window.location.reload();
+          }}
+        >
+          Close
+        </button>
+      </div>
       <div>
         <div className="flex items-center gap-1">
           <div className="p-2 bg-transparent border border-white rounded-full"></div>
