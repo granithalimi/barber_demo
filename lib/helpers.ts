@@ -40,3 +40,11 @@ export const static_times = [
     status: "pending",
   },
 ];
+
+export const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const day = date.toLocaleDateString("sq-Al", { weekday: "long" });
+  const month = date.toLocaleDateString("sq-Al", { month: "long" });
+  const dayNum = date.getDate();
+  return `${dayNum} ${month}, ${day}`;
+};

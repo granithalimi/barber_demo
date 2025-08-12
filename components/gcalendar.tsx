@@ -12,12 +12,11 @@ type Time = {
 
 export default function Gcalendar() {
   const [times, setTimes] = useState<Time[] | undefined>();
+  const [showMessage, setShowMessage] = useState<boolean>(false);
 
   // Submiting Data
   const [date, setDate] = useState<Date>(new Date());
   const [time, setTime] = useState<string>("");
-
-  const [showMessage, setShowMessage] = useState<boolean>(false);
 
   const maxDate = new Date();
   maxDate.setMonth(maxDate.getMonth() + 2);
