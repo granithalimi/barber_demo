@@ -35,7 +35,7 @@ export default function PastAppointments() {
     };
 
     fetchTodayApps();
-  }, []);
+  }, [today]);
 
   const handleDelete = (id: number) => {
     async function del() {
