@@ -75,7 +75,7 @@ export function SignUpForm({
               width={50}
               height={50}
               alt="logo"
-              src={"/images/favicon.ico"}
+              src={"/images/logo.png"}
             />
           </Link>
         </div>
