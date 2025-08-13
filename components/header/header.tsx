@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, X } from "lucide-react";
+import { LayoutDashboard, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import "@/app/globals.css";
@@ -100,11 +100,7 @@ export default function Header() {
             Gallery
           </Link>
           {auth ? (
-            <button
-              onClick={logout}
-            >
-              Logout
-            </button>
+            <button onClick={logout}>Logout</button>
           ) : (
             <Link
               href={"auth/login"}

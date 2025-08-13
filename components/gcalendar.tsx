@@ -15,6 +15,8 @@ export default function Gcalendar() {
   const [showMessage, setShowMessage] = useState<boolean>(false);
 
   // Submiting Data
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [date, setDate] = useState<Date>(new Date());
   const [time, setTime] = useState<string>("");
 
@@ -32,6 +34,8 @@ export default function Gcalendar() {
         date: submitDate,
         time: time,
         status: "booked",
+        name: name,
+        email: email,
       });
       if (error) throw error;
       setShowMessage(true);
@@ -165,6 +169,7 @@ export default function Gcalendar() {
               type="text"
               required
               className="py-1 px-2 rounded-lg bg-transparent border border-white w-full"
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div className="flex flex-col w-full">
@@ -173,6 +178,7 @@ export default function Gcalendar() {
               type="email"
               required
               className="py-1 px-2 rounded-lg bg-transparent border border-white w-full"
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <button

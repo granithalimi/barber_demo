@@ -9,6 +9,8 @@ type Appointment = {
   date: string;
   time: string;
   status: string;
+  name: string;
+  email: string;
 };
 
 export default function AllAppointments({ apps }: { apps: Appointment[] }) {
@@ -80,9 +82,7 @@ export default function AllAppointments({ apps }: { apps: Appointment[] }) {
               key={ind}
             >
               <div className="flex-col md:gap-3">
-                <p className="font-extrabold text-center">
-                  Hasan
-                </p>
+                <p className="font-extrabold text-center">{a.name}</p>
                 <p>
                   <span className="font-extrabold">Data:</span> {formattedDate}
                 </p>
