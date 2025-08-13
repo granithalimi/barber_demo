@@ -10,7 +10,12 @@ type Time = {
   status: string;
 };
 
-export default function Acalendar() {
+type Props = {
+  name: string | undefined;
+  email: string | undefined;
+};
+
+export default function Acalendar({ name, email }: Props) {
   const [times, setTimes] = useState<Time[] | undefined>();
   const [showMessage, setShowMessage] = useState<boolean>(false);
 
@@ -32,6 +37,8 @@ export default function Acalendar() {
         date: submitDate,
         time: time,
         status: "booked",
+        name: name,
+        email: email,
       });
       if (error) throw error;
       setShowMessage(true);
