@@ -2,6 +2,7 @@
 
 import { montserrat } from "@/fonts/font";
 import { createClient } from "@/lib/supabase/client";
+import { createClientAdmin } from "@/lib/supabase/serverAdmin";
 import { useEffect, useState } from "react";
 
 type User = {
@@ -43,15 +44,22 @@ export default function Users({ users }: { users: User[] }) {
   };
 
   const handleUserDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this user?")) {
-      // const supabase = createClient();
-      // const { error } = await supabase.auth.admin.deleteUser(id);
-      // if (error) {
-      //   console.log(error);
-      // }
-      console.log("testing", id)
+    if (!confirm("Are you sure you want to delete this user?")) return;
+
+    const res = await fetch("/api/delete-user", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+
+    const data = await res.json();
+    if (data.error) {
+      console.error(data.error);
+      return;
     }
+    window.location.reload();
   };
+
   return (
     <>
       <h1 className={`${montserrat.className} text-center text-2xl mb-5`}>

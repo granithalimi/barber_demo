@@ -110,6 +110,24 @@ export default function Header() {
         className={`${show ? "show-menu z-20" : "-z-10"} hide-menu fixed flex flex-col justify-between w-full h-screen bg-black/80 `}
       >
         <div className="flex flex-col gap-7 pt-24 text-gray-500">
+          {role == "admin" && (
+            <Link
+              href={"/dashboard"}
+              className={`${poppins.className} hover:text-white w-11/12 mx-auto border-b border-gray-400 duration-500 flex gap-1`}
+            >
+              <LayoutDashboard />
+              Dashboard
+            </Link>
+          )}
+          {role == "barber" && (
+            <Link
+              href={"/appointments"}
+              className={`${poppins.className} hover:text-white w-11/12 mx-auto border-b border-gray-400 duration-500 flex gap-1`}
+            >
+              <Calendar />
+              Appointments
+            </Link>
+          )}
           <Link
             href={"/"}
             className={`${poppins.className} hover:text-white w-11/12 mx-auto border-b border-gray-400 duration-500`}

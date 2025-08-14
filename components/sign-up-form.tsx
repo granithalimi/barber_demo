@@ -50,7 +50,7 @@ export function SignUpForm({
         },
       });
       if (data) {
-        const users = await supabase.from("users").insert({
+        const users = await supabase.from("profiles").insert({
           user_id: data?.user?.id,
           name: name,
           role: "client",
