@@ -1,7 +1,6 @@
 import Header from "@/components/header/header";
+import Users from "@/components/users";
 import { createClient } from "@/lib/supabase/server";
-import { Calendar, Users } from "lucide-react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function Page() {
@@ -12,32 +11,25 @@ export default async function Page() {
   // get user role by id
   const { data } = await supabase
     .from("users")
-    .select("role")
+    .select("role, id")
     .eq("user_id", auth.data?.user?.id)
     .single();
   if (data?.role !== "admin") {
     redirect("/");
   }
+
+  const all_users = await supabase
+    .from("users")
+    .select("*")
+    .neq("id", data?.id)
+    .order("id", { ascending: true });
+
   return (
     <main className="bg-gradient-to-tl from-gray-900 to-gray-800 min-h-screen">
       <Header />
       <div className="w-full h-20 bg-transparent"></div>
-      <div className="flex justify-center gap-4">
-        <Link
-          className="px-5 py-2 rounded-lg border border-white flex gap-1 hover:bg-white hover:text-black duration-300"
-          href={"/appointments"}
-        >
-          Appointments
-          <Calendar />
-        </Link>
-        <Link
-          className="px-5 py-2 rounded-lg border border-white flex gap-1 hover:bg-white hover:text-black duration-300"
-          href={"/all_users"}
-        >
-          Users
-          <Users />
-        </Link>
-      </div>
+
+      {all_users.data && all_users.data.length > 0 && <Users users={all_users.data} />}
     </main>
   );
 }
