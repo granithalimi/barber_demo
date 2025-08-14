@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, X } from "lucide-react";
+import { Calendar, LayoutDashboard, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import "@/app/globals.css";
@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 export default function Header() {
   const [show, setShow] = useState(false);
   const [auth, setAuth] = useState(false);
+  const [role, setRole] = useState("");
   const supabase = createClient();
   const router = useRouter();
 
@@ -22,6 +23,16 @@ export default function Header() {
         setAuth(false);
       } else {
         setAuth(true);
+        const profile = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("user_id", data?.user?.id)
+          .single();
+        if (profile?.data?.role == "admin") {
+          setRole("admin");
+        } else if (profile?.data?.role == "barber") {
+          setRole("barber");
+        }
       }
     }
 
@@ -41,9 +52,27 @@ export default function Header() {
               <span className="text-xl font-bold text-white">BarberShop</span>
             </Link>
             <div className="hidden md:flex space-x-8 font-bold text-gray-600">
-              <Link href={"/"} className="hover:text-white duration-500">
-                Home
-              </Link>
+              {role == "admin" && (
+                <Link
+                  href={"/dashboard"}
+                  className="hover:text-white duration-500"
+                >
+                  <LayoutDashboard />
+                </Link>
+              )}
+              {role == "barber" && (
+                <Link
+                  href={"/appointments"}
+                  className="hover:text-white duration-500"
+                >
+                  <Calendar />
+                </Link>
+              )}
+              {role == "client" && (
+                <Link href={"/"} className="hover:text-white duration-500">
+                  Home
+                </Link>
+              )}
               <Link href={"/book"} className="hover:text-white duration-500">
                 Book_Appointment
               </Link>
@@ -112,12 +141,7 @@ export default function Header() {
         </div>
         <div className="text-white mb-28 flex justify-center items-center">
           <Link href={"/"}>
-            <Image
-              width={50}
-              height={50}
-              alt="logo"
-              src={"/images/logo.png"}
-            />
+            <Image width={50} height={50} alt="logo" src={"/images/logo.png"} />
           </Link>
         </div>
       </div>

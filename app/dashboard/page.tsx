@@ -11,10 +11,11 @@ export default async function Page() {
 
   // get user role by id
   const { data } = await supabase
-    .from("users")
+    .from("profiles")
     .select("role")
     .eq("user_id", auth.data?.user?.id)
     .single();
+
   if (data?.role !== "admin") {
     redirect("/");
   }

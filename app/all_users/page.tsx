@@ -10,7 +10,7 @@ export default async function Page() {
 
   // get user role by id
   const { data } = await supabase
-    .from("users")
+    .from("profiles")
     .select("role, id")
     .eq("user_id", auth.data?.user?.id)
     .single();
@@ -19,7 +19,7 @@ export default async function Page() {
   }
 
   const all_users = await supabase
-    .from("users")
+    .from("profiles")
     .select("*")
     .neq("id", data?.id)
     .order("id", { ascending: true });

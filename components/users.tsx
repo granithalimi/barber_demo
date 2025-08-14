@@ -1,6 +1,7 @@
 "use client";
 
 import { montserrat } from "@/fonts/font";
+import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 
 type User = {
@@ -15,12 +16,41 @@ export default function Users({ users }: { users: User[] }) {
     setAllUsers(users);
   }, [users]);
 
-  const handleMakeBarberClick = () => {
-    console.log("made barber");
+  const handleMakeBarberClick = (id: string) => {
+    async function makeBarber() {
+      const supabase = createClient();
+      await supabase
+        .from("profiles")
+        .update({ role: "barber" })
+        .eq("user_id", id);
+    }
+
+    makeBarber();
+    window.location.reload();
   };
 
-  const handleMakeClientClick = () => {
-    console.log("made client");
+  const handleMakeClientClick = (id: string) => {
+    async function makeClient() {
+      const supabase = createClient();
+      await supabase
+        .from("profiles")
+        .update({ role: "client" })
+        .eq("user_id", id);
+    }
+
+    makeClient();
+    window.location.reload();
+  };
+
+  const handleUserDelete = async (id: string) => {
+    if (confirm("Are you sure you want to delete this user?")) {
+      // const supabase = createClient();
+      // const { error } = await supabase.auth.admin.deleteUser(id);
+      // if (error) {
+      //   console.log(error);
+      // }
+      console.log("testing", id)
+    }
   };
   return (
     <>
@@ -37,25 +67,30 @@ export default function Users({ users }: { users: User[] }) {
               >
                 <div className="flex items-center gap-2">
                   <h1>{u.name}</h1>
-                  <h1>{u.name}</h1>
                 </div>
                 <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handleUserDelete(u.user_id)}
+                    className="bg-red-500 px-2 py-1 rounded-lg hover:bg-red-400 duration-300"
+                  >
+                    Delete
+                  </button>
                   {u.role == "client" ? (
                     <button
-                      onClick={() => handleMakeBarberClick()}
+                      onClick={() => handleMakeBarberClick(u.user_id)}
                       className="bg-blue-500 px-2 py-1 rounded-lg hover:bg-blue-400 duration-300"
                     >
                       +Barber
                     </button>
                   ) : (
                     <button
-                      onClick={() => handleMakeClientClick()}
-                      className="bg-red-500 px-2 py-1 rounded-lg hover:bg-red-400 duration-300"
+                      onClick={() => handleMakeClientClick(u.user_id)}
+                      className="bg-gray-500 px-2 py-1 rounded-lg hover:bg-gray-400 duration-300"
                     >
-                      -Barber
+                      -Client
                     </button>
                   )}
-                  <h1>{u.role}</h1>
+                  <h1 className="uppercase">{u.role}</h1>
                 </div>
               </div>
             ))}
