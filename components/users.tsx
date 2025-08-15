@@ -2,7 +2,6 @@
 
 import { montserrat } from "@/fonts/font";
 import { createClient } from "@/lib/supabase/client";
-import { createClientAdmin } from "@/lib/supabase/serverAdmin";
 import { useEffect, useState } from "react";
 
 type User = {
