@@ -16,30 +16,33 @@ export default function Users({ users }: { users: User[] }) {
     setAllUsers(users);
   }, [users]);
 
-  const handleMakeBarberClick = (id: string) => {
-    async function makeBarber() {
-      const supabase = createClient();
-      await supabase
-        .from("profiles")
-        .update({ role: "barber" })
-        .eq("user_id", id);
-    }
+  const handleMakeBarberClick = async (id: string) => {
+    const supabase = createClient();
+    const { error } = await supabase
+      .from("profiles")
+      .update({ role: "barber" })
+      .eq("user_id", id);
 
-    makeBarber();
-    window.location.reload();
+
+    if (error) {
+      console.log(error)
+    } else {
+      window.location.reload();
+    }
   };
 
-  const handleMakeClientClick = (id: string) => {
-    async function makeClient() {
-      const supabase = createClient();
-      await supabase
-        .from("profiles")
-        .update({ role: "client" })
-        .eq("user_id", id);
-    }
+  const handleMakeClientClick = async (id: string) => {
+    const supabase = createClient();
+    const { error } = await supabase
+      .from("profiles")
+      .update({ role: "client" })
+      .eq("user_id", id);
 
-    makeClient();
-    window.location.reload();
+    if (error) {
+      console.log(error)
+    } else {
+      window.location.reload();
+    }
   };
 
   const handleUserDelete = async (id: string) => {
