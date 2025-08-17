@@ -25,10 +25,11 @@ export default async function Page() {
 
   const app = await supabase
     .from("appointments")
-    .select("*")
+    .select("*, profiles(name)")
     .order("date", { ascending: true })
     .order("time", { ascending: true });
 
+  console.log(app)
   return (
     <main className="bg-gradient-to-tl from-gray-900 to-gray-800 min-h-screen">
       <Header />

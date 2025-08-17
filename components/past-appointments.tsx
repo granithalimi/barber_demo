@@ -11,6 +11,7 @@ type Appointment = {
   status: string;
   name: string;
   email: string;
+  profiles: {name: string};
 };
 
 export default function PastAppointments() {
@@ -22,7 +23,7 @@ export default function PastAppointments() {
       const supabase = createClient();
       const { data, error } = await supabase
         .from("appointments")
-        .select("*")
+        .select("*, profiles(name)")
         .lt("date", today)
         .order("time", { ascending: true });
 
@@ -71,6 +72,9 @@ export default function PastAppointments() {
                 </p>
                 <p>
                   <span className="font-extrabold">Ora:</span> {a.time}
+                </p>
+                <p>
+                  <span className="font-extrabold">Barber:</span> {a.profiles?.name}
                 </p>
               </div>
               <div className="flex justify-center gap-1 md:gap-3 items-center">

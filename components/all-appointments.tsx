@@ -11,6 +11,7 @@ type Appointment = {
   status: string;
   name: string;
   email: string;
+  profiles: {name: string};
 };
 
 export default function AllAppointments({ apps }: { apps: Appointment[] }) {
@@ -88,6 +89,9 @@ export default function AllAppointments({ apps }: { apps: Appointment[] }) {
                 </p>
                 <p>
                   <span className="font-extrabold">Ora:</span> {a.time}
+                </p>
+                <p>
+                  <span className="font-extrabold">Barber:</span> {a.profiles.name}
                 </p>
               </div>
               <div className="flex justify-center gap-1 md:gap-3 items-center">
