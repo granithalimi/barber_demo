@@ -15,7 +15,7 @@ export default async function Page() {
   // get user role by id
   const { data } = await supabase
     .from("profiles")
-    .select("role")
+    .select("role, id")
     .eq("user_id", auth.data?.user?.id)
     .single();
 
@@ -23,33 +23,70 @@ export default async function Page() {
     redirect("/");
   }
 
-  const app = await supabase
-    .from("appointments")
-    .select("*, profiles(name)")
-    .order("date", { ascending: true })
-    .order("time", { ascending: true });
+  const all_apps =
+    data?.role == "admin"
+      ? await supabase
+        .from("appointments")
+        .select("*, profiles(name)")
+        .order("date", { ascending: true })
+        .order("time", { ascending: true })
+      : await supabase
+        .from("appointments")
+        .select("*, profiles(name)")
+        .eq("barber_id", data?.id)
+        .order("date", { ascending: true })
+        .order("time", { ascending: true });
+
+  const today = new Date().toLocaleDateString("en-CA");
+  const tapps =
+    data?.role == "admin"
+      ? await supabase
+        .from("appointments")
+        .select("*, profiles(name)")
+        .eq("date", today)
+        .order("time", { ascending: true })
+      : await supabase
+        .from("appointments")
+        .select("*, profiles(name)")
+        .eq("date", today)
+        .eq("barber_id", data?.id)
+        .order("time", { ascending: true });
+
+  const papps =
+    data?.role == "admin"
+      ? await supabase
+        .from("appointments")
+        .select("*, profiles(name)")
+        .lt("date", today)
+        .order("time", { ascending: true })
+      : await supabase
+        .from("appointments")
+        .select("*, profiles(name)")
+        .lt("date", today)
+        .eq("barber_id", data?.id)
+        .order("time", { ascending: true });
 
   return (
     <main className="bg-gradient-to-tl from-gray-900 to-gray-800 min-h-screen">
       <Header />
       <div className="w-full h-20 bg-transparent"></div>
 
-      {app.data && app.data.length > 0 ? (
+      {all_apps.data && all_apps.data.length > 0 ? (
         <>
           <h1 className={`${montserrat.className} text-center text-2xl mb-5`}>
             Todays Appointments
           </h1>
-          <TodaysAppointments />
+          <TodaysAppointments tapps={tapps?.data} />
           <hr className="my-10 w-11/12 md:w-2/3 mx-auto border-gray-400" />
           <h1 className={`${montserrat.className} text-center text-2xl mb-5`}>
             All Appointments
           </h1>
-          <AllAppointments apps={app.data} />
+          <AllAppointments apps={all_apps.data} />
           <hr className="my-10 w-11/12 md:w-2/3 mx-auto border-gray-400" />
           <h1 className={`${montserrat.className} text-center text-2xl mb-5`}>
             Past Appointments(Recommend Deleting)
           </h1>
-          <PastAppointments />
+          <PastAppointments papps={papps?.data} />
           <Footer />
         </>
       ) : (

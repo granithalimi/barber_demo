@@ -14,29 +14,12 @@ type Appointment = {
   profiles: {name: string};
 };
 
-export default function TodaysAppointments() {
-  const today = new Date().toLocaleDateString("en-CA");
-  const [apps, setApps] = useState<Appointment[]>();
+export default function TodaysAppointments({ tapps }: { tapps: Appointment[] | null }) {
+  const [apps, setApps] = useState<Appointment[] | null>();
 
   useEffect(() => {
-    const fetchTodayApps = async () => {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from("appointments")
-        .select("*, profiles(name)")
-        .eq("date", today)
-        .order("time", { ascending: true });
-
-      if (error) {
-        console.log(error);
-        return;
-      }
-
-      setApps(data);
-    };
-
-    fetchTodayApps();
-  }, [today]);
+    setApps(tapps);
+  }, [apps]);
 
   const handleDelete = (id: number) => {
     async function del() {
