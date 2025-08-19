@@ -1,5 +1,4 @@
 import Acalendar from "@/components/acalendar";
-import Footer from "@/components/footer";
 import Header from "@/components/header/header";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
@@ -23,7 +22,8 @@ export default async function Page() {
       <div className="w-full h-20 bg-transparent"></div>
 
       <Acalendar name={name?.data?.name} email={data?.user?.email} />
-      <Footer />
+      <div className="pb-28"></div>
+      {/* <Footer /> */}
     </main>
   );
 }

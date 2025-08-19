@@ -1,4 +1,3 @@
-import Footer from "@/components/footer";
 import Gcalendar from "@/components/gcalendar";
 import Header from "@/components/header/header";
 import { poppins } from "@/fonts/font";
@@ -25,7 +24,7 @@ export default async function Page() {
             Book an Appointment as a Guest
           </span>
           <br /> You&apos;re currently booking an appointment as a guest. For a
-          faster checkout, access to your booking history, and a more
+          faster submit, access to your booking history, and a more
           personalized experience, we recommend{" "}
           <Link href={"/auth/login"} className="underline text-white">
             logging in
@@ -38,7 +37,8 @@ export default async function Page() {
       </div>
 
       <Gcalendar />
-      <Footer />
+      <div className="pb-28"></div>
+      {/* <Footer /> */}
     </main>
   );
 }

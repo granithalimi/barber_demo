@@ -76,6 +76,12 @@ export default function Header() {
               <Link href={"/book"} className="hover:text-white duration-500">
                 Book_Appointment
               </Link>
+              <Link
+                href={"/my-appointments"}
+                className="hover:text-white duration-500"
+              >
+                My_Appointments
+              </Link>
               <Link href={"/gallery"} className="hover:text-white duration-500">
                 Gallery
               </Link>
@@ -140,6 +146,14 @@ export default function Header() {
           >
             Book Appointment
           </Link>
+          {auth && (
+            <Link
+              href={"/my-appointments"}
+              className={`${poppins.className} hover:text-white w-11/12 mx-auto border-b border-gray-400 duration-500`}
+            >
+              My_Appointments
+            </Link>
+          )}
           <Link
             href={"/gallery"}
             className={`${poppins.className} hover:text-white w-11/12 mx-auto border-b border-gray-400 duration-500`}
