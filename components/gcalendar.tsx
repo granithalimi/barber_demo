@@ -61,7 +61,8 @@ export default function Gcalendar() {
       const { data } = await supabase
         .from("appointments")
         .select("time, status")
-        .eq("date", fetchingDate);
+        .eq("date", fetchingDate)
+        .eq("barber_id", barber);
       if (data) {
         for (let i = 0; i < data.length; i++) {
           setTimes((prev) =>
@@ -87,9 +88,9 @@ export default function Gcalendar() {
     }
 
     setTime("");
-    fetchData();
     fetchBarbers();
-  }, [date]);
+    fetchData();
+  }, [date, barber]);
 
   return (
     <div className="mt-10 flex flex-col items-center">

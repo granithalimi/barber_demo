@@ -76,12 +76,14 @@ export default function Header() {
               <Link href={"/book"} className="hover:text-white duration-500">
                 Book_Appointment
               </Link>
-              <Link
-                href={"/my-appointments"}
-                className="hover:text-white duration-500"
-              >
-                My_Appointments
-              </Link>
+              {auth && (
+                <Link
+                  href={"/my-appointments"}
+                  className="hover:text-white duration-500"
+                >
+                  My_Appointments
+                </Link>
+              )}
               <Link href={"/gallery"} className="hover:text-white duration-500">
                 Gallery
               </Link>
