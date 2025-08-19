@@ -11,15 +11,21 @@ type Appointment = {
   status: string;
   name: string;
   email: string;
-  profiles: {name: string};
+  profiles: { name: string };
 };
 
-export default function TodaysAppointments({ tapps }: { tapps: Appointment[] | null }) {
+export default function TodaysAppointments({
+  tapps,
+  role,
+}: {
+  tapps: Appointment[] | null;
+  role: string;
+}) {
   const [apps, setApps] = useState<Appointment[] | null>();
 
   useEffect(() => {
     setApps(tapps);
-  }, [apps]);
+  }, [tapps]);
 
   const handleDelete = (id: number) => {
     async function del() {
@@ -90,7 +96,8 @@ export default function TodaysAppointments({ tapps }: { tapps: Appointment[] | n
                   <span className="font-extrabold">Ora:</span> {a.time}
                 </p>
                 <p>
-                  <span className="font-extrabold">Barber:</span> {a.profiles?.name}
+                  <span className="font-extrabold">Barber:</span>{" "}
+                  {a.profiles?.name}
                 </p>
               </div>
               <div className="flex justify-center gap-1 md:gap-3 items-center">
@@ -109,12 +116,14 @@ export default function TodaysAppointments({ tapps }: { tapps: Appointment[] | n
                     Accept
                   </button>
                 )}
-                <button
-                  className="px-2 py-1 rounded-lg text-base text-white bg-red-600 hover:bg-red-700 duration-300"
-                  onClick={() => handleDelete(a.id)}
-                >
-                  Delete
-                </button>
+                {role == "admin" && (
+                  <button
+                    className="px-2 py-1 rounded-lg text-base text-white bg-red-600 hover:bg-red-700 duration-300"
+                    onClick={() => handleDelete(a.id)}
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
             </div>
           );

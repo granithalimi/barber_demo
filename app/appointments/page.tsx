@@ -76,12 +76,12 @@ export default async function Page() {
           <h1 className={`${montserrat.className} text-center text-2xl mb-5`}>
             Todays Appointments
           </h1>
-          <TodaysAppointments tapps={tapps?.data} />
+          <TodaysAppointments role={data?.role} tapps={tapps?.data} />
           <hr className="my-10 w-11/12 md:w-2/3 mx-auto border-gray-400" />
           <h1 className={`${montserrat.className} text-center text-2xl mb-5`}>
             All Appointments
           </h1>
-          <AllAppointments apps={all_apps.data} />
+          <AllAppointments role={data?.role} apps={all_apps.data} />
           <hr className="my-10 w-11/12 md:w-2/3 mx-auto border-gray-400" />
           <h1 className={`${montserrat.className} text-center text-2xl mb-5`}>
             Past Appointments(Recommend Deleting)

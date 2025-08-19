@@ -11,10 +11,16 @@ type Appointment = {
   status: string;
   name: string;
   email: string;
-  profiles: {name: string};
+  profiles: { name: string };
 };
 
-export default function AllAppointments({ apps }: { apps: Appointment[] }) {
+export default function AllAppointments({
+  apps,
+  role,
+}: {
+  apps: Appointment[];
+  role: string;
+}) {
   const [appointments, setAppoinments] = useState<Appointment[]>();
 
   useEffect(() => {
@@ -91,7 +97,8 @@ export default function AllAppointments({ apps }: { apps: Appointment[] }) {
                   <span className="font-extrabold">Ora:</span> {a.time}
                 </p>
                 <p>
-                  <span className="font-extrabold">Barber:</span> {a.profiles.name}
+                  <span className="font-extrabold">Barber:</span>{" "}
+                  {a.profiles.name}
                 </p>
               </div>
               <div className="flex justify-center gap-1 md:gap-3 items-center">
@@ -110,12 +117,14 @@ export default function AllAppointments({ apps }: { apps: Appointment[] }) {
                     Accept
                   </button>
                 )}
-                <button
-                  className="px-2 py-1 rounded-lg text-base text-white bg-red-600 hover:bg-red-700 duration-300"
-                  onClick={() => handleDelete(a.id)}
-                >
-                  Delete
-                </button>
+                {role == "admin" && (
+                  <button
+                    className="px-2 py-1 rounded-lg text-base text-white bg-red-600 hover:bg-red-700 duration-300"
+                    onClick={() => handleDelete(a.id)}
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
             </div>
           );

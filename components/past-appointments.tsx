@@ -19,7 +19,7 @@ export default function PastAppointments({ papps }: { papps: Appointment[] | nul
 
   useEffect(() => {
     setApps(papps);
-  }, [apps]);
+  }, [papps]);
 
   const handleDelete = (id: number) => {
     async function del() {
