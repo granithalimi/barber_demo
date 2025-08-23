@@ -7,6 +7,8 @@ export function GET(request: NextRequest) {
       status: 401,
     });
   }
+
+  console.log("Cron ran at:", new Date())
  
-  return Response.json({ success: true });
+  return Response.json({message: "Cron ran at: " + new Date()});
 }
