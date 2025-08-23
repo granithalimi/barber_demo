@@ -4,10 +4,6 @@
     {
       "path": "/api/cron",
       "schedule": "* * * * *"
-    },
-    {
-      "path": "/api/sync-slack-team/T4BOE34OP",
-      "schedule": "0 5 * * *"
     }
   ]
 }
