@@ -1,4 +1,7 @@
+import { NextResponse } from "next/server";
+
+export const revalidate = 0;
 export async function GET() {
   console.log("Cron ran at:", new Date().toISOString())
-  return new Response('Cron job completed', { status: 200 });
+  return NextResponse.json({message:"Hello"}, {status: 200});
 }

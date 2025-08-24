@@ -13,7 +13,7 @@ export default function HeadSection(){
           <span className="text-gray-600">Shop</span>
         </h1>
         <p className="text-xl md:text-2xl text-gray-300 mb-8">
-          Where Style Meets Precision
+          Where Style Meets Precision.
         </p>
         <p className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto">
           Experience the finest grooming services with our expert barbers. From
