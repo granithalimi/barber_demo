@@ -1,7 +1,6 @@
 "use client";
 
 import { formatDate } from "@/lib/helpers";
-import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 
 type Appointment = {
@@ -21,21 +20,19 @@ export default function PastAppointments({ papps }: { papps: Appointment[] | nul
     setApps(papps);
   }, [papps]);
 
-  const handleDelete = (id: number) => {
-    async function del() {
-      const supabase = createClient();
-      const { error } = await supabase
-        .from("appointments")
-        .delete()
-        .eq("id", id);
-      if (error) {
-        console.log(error);
-        return;
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await fetch("/api/delete-appointment", {
+        method: "DELETE",
+        body: JSON.stringify({ id }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-      window.location.reload();
+      window.location.reload()
+    } catch (err) {
+      console.error(err);
     }
-
-    del();
   };
 
   return (

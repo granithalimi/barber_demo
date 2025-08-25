@@ -1,18 +1,15 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export async function DELETE(request: Request) {
   const { id } = await request.json();
   if (!id || typeof id !== "number") {
-    return NextResponse.json(
-      { error: "Valid ID is required" },
-      { status: 400 },
-    );
+    return NextResponse.json({ message: "Not a Valid ID", status: 400 });
   }
 
   const supabase = await createClient();
 
-  // check if user is authenticated
+  // check user auth
   const auth = await supabase.auth.getUser();
   if (auth?.error || !auth?.data?.user) {
     return NextResponse.json(
@@ -21,7 +18,7 @@ export async function POST(request: Request) {
     );
   }
 
-  // check if user is admin or barber
+  // check user role
   const { data } = await supabase
     .from("profiles")
     .select("role")
@@ -35,19 +32,12 @@ export async function POST(request: Request) {
     });
   }
 
-  // update
-  const { error } = await supabase
-    .from("appointments")
-    .update({ status: "booked" })
-    .eq("id", id);
+  const { error } = await supabase.from("appointments").delete().eq("id", id);
   if (error) {
-    return NextResponse.json({
-      message: "Updating error",
-      status: 400,
-    });
+    return NextResponse.json({ message: "Not a Valid ID", status: 400 });
   }
-  return NextResponse.json(
-    { receivedId: id, message: "Appointment Declined" },
-    { status: 200 },
-  );
+  return NextResponse.json({
+    message: "Appointment Deleted Successfully",
+    status: 200,
+  });
 }
