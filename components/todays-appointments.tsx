@@ -44,38 +44,34 @@ export default function TodaysAppointments({
     del();
   };
 
-  const handleAccept = (id: number) => {
-    async function accept() {
-      const supabase = createClient();
-      const { error } = await supabase
-        .from("appointments")
-        .update({ status: "accepted" })
-        .eq("id", id);
-      if (error) {
-        console.log(error);
-        return;
+  const handleAccept = async (id: number) => {
+    try {
+      const response = await fetch("/api/accept-appointment", {
+        method: "POST",
+        body: JSON.stringify({ id }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-      window.location.reload();
+      window.location.reload()
+    } catch (error) {
+      console.error(error);
     }
-
-    accept();
   };
 
-  const handleDecline = (id: number) => {
-    async function decline() {
-      const supabase = createClient();
-      const { error } = await supabase
-        .from("appointments")
-        .update({ status: "booked" })
-        .eq("id", id);
-      if (error) {
-        console.log(error);
-        return;
+  const handleDecline = async (id: number) => {
+    try {
+      const response = await fetch("/api/decline-appointment", {
+        method: "POST",
+        body: JSON.stringify({ id }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-      window.location.reload();
+      window.location.reload()
+    } catch (error) {
+      console.error(error);
     }
-
-    decline();
   };
   return (
     <div className="mx-auto w-11/12 md:w-2/3 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
