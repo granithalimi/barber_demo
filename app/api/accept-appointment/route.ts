@@ -1,12 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
-import sgMail from "@sendgrid/mail";
-
-if (!process.env.SENDGRID_API_KEY) {
-  console.error("SENDGRID_API_KEY is not set in environment variables");
-} else {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-}
 
 export async function POST(request: Request) {
   const { id } = await request.json();
