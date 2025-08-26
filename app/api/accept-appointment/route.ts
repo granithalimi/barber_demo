@@ -1,5 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
+import sgMail from "@sendgrid/mail";
+
+if (!process.env.SENDGRID_API_KEY) {
+  console.error("SENDGRID_API_KEY is not set in environment variables");
+} else {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+}
 
 export async function POST(request: Request) {
   const { id } = await request.json();
@@ -48,6 +55,15 @@ export async function POST(request: Request) {
     });
   }
 
+  const app = await supabase
+    .from("appointments")
+    .select("email")
+    .eq("id", id)
+    .single();
+
+  const email = app?.data?.email;
+  console.log(email)
+  // Send email
   return NextResponse.json(
     { receivedId: id, message: "Appointment accepted" },
     { status: 200 },
