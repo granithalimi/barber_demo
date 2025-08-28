@@ -1,5 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
   const { id } = await request.json();
@@ -55,8 +58,17 @@ export async function POST(request: Request) {
     .single();
 
   const email = app?.data?.email;
-  console.log(email)
+  console.log(email);
   // Send email
+  const email_sent = await resend.emails.send({
+    from: "barbershop@snap-sending.space",
+    to: email,
+    subject: "Hello from BarberShop",
+    html: "<p>This is a test email sent from Next.js + Resend 🚀</p>",
+  });
+
+  if(email_sent.error) console.log(email_sent.error) 
+
   return NextResponse.json(
     { receivedId: id, message: "Appointment accepted" },
     { status: 200 },
