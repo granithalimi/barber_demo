@@ -61,13 +61,13 @@ export async function POST(request: Request) {
   console.log(email);
   // Send email
   const email_sent = await resend.emails.send({
-    from: "barbershop@snap-sending.space",
+    from: "BarberShop <barbershop@snap-sending.space>",
     to: email,
-    subject: "Hello from BarberShop",
+    subject: "Your Fresh Haircut Awaits ✂️",
     html: "<p>This is a test email sent from Next.js + Resend 🚀</p>",
   });
 
-  if(email_sent.error) console.log(email_sent.error) 
+  if (email_sent.error) console.log(email_sent.error);
 
   return NextResponse.json(
     { receivedId: id, message: "Appointment accepted" },
