@@ -1,3 +1,4 @@
+import { html } from "@/lib/helpers";
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
@@ -53,18 +54,25 @@ export async function POST(request: Request) {
 
   const app = await supabase
     .from("appointments")
-    .select("email")
+    .select("email, name, date, time")
     .eq("id", id)
     .single();
 
   const email = app?.data?.email;
+  const name = app?.data?.name;
+  const date = app?.data?.date;
+  const time = app?.data?.time;
   console.log(email);
+  console.log(name);
+  console.log(date);
+  console.log(time);
+
   // Send email
   const email_sent = await resend.emails.send({
     from: "BarberShop <barbershop@snap-sending.space>",
     to: email,
     subject: "Your Fresh Haircut Awaits ✂️",
-    html: "<p>This is a test email sent from Next.js + Resend 🚀</p>",
+    html: html(name, date, time),
   });
 
   if (email_sent.error) console.log(email_sent.error);

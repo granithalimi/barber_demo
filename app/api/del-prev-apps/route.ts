@@ -10,7 +10,7 @@ export async function GET() {
   const { data, error } = await supabase
     .from("appointments")
     .delete()
-    .filter("date", "<", today);
+    .lt("date", today)
 
   if (data) console.log(data);
   if (error) console.log(error);
