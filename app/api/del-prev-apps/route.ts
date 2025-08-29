@@ -12,7 +12,8 @@ export async function GET() {
     .delete()
     .lt("date", today)
 
-  if (data) console.log(data);
-  if (error) console.log(error);
-  return NextResponse.json({ message: "Hello" }, { status: 200 });
+  if (error) {
+    return NextResponse.json({ message: error }, { status: 400 });
+  }
+  return NextResponse.json({ message: data }, { status: 200 });
 }
