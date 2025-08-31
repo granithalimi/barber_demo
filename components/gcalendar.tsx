@@ -19,6 +19,7 @@ export default function Gcalendar() {
   // Submiting Data
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [date, setDate] = useState<Date>(new Date());
   const [time, setTime] = useState<string>("");
   const [barber, setBarber] = useState<string | null>();
@@ -26,27 +27,23 @@ export default function Gcalendar() {
   const maxDate = new Date();
   maxDate.setMonth(maxDate.getMonth() + 2);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e:React.FormEvent) => {
+    e.preventDefault()
 
-    const supabase = createClient();
     const submitDate = date.toLocaleDateString("en-CA");
+    const response = await fetch("/api/guest-book", {
+      method: "POST",
+      body: JSON.stringify({ name, email, phone, submitDate, time, barber }),
+    });
 
-    try {
-      const { error } = await supabase.from("appointments").insert({
-        date: submitDate,
-        time: time,
-        status: "booked",
-        name: name,
-        email: email,
-        barber_id: barber,
-      });
-      if (error) throw error;
-      setShowMessage(true);
-      setDate(new Date());
-    } catch (error) {
-      console.log(error);
+    if (!response.ok) {
+      const data = await response.json()
+      console.log("error", data.error);
+      return;
     }
+
+    setShowMessage(true);
+    setDate(new Date());
   };
 
   const handleButtonClick = (clickedTime: string) => {
@@ -203,6 +200,7 @@ export default function Gcalendar() {
                 <input
                   type="text"
                   required
+                  placeholder="John Smith"
                   className="py-1 px-2 rounded-lg bg-transparent border border-white w-full"
                   onChange={(e) => setName(e.target.value)}
                 />
@@ -212,10 +210,23 @@ export default function Gcalendar() {
                 <input
                   type="email"
                   required
+                  placeholder="john@example.com"
                   className="py-1 px-2 rounded-lg bg-transparent border border-white w-full"
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
+              <div className="flex flex-col w-full">
+                <label>Phone:</label>
+                <input
+                  id="phone"
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+389 123456789"
+                  className="py-1 px-2 rounded-lg bg-transparent border border-white w-full"
+                />
+              </div>
+
               <button
                 className="bg-red-500 px-3 py-1 rounded-lg font-bold hover:bg-red-400 duration-300"
                 type="submit"
