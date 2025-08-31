@@ -10,9 +10,9 @@ export default async function Page() {
     redirect("/book_as_guest");
   }
 
-  const name = await supabase
+  const user_data = await supabase
     .from("profiles")
-    .select("name")
+    .select("name, phone")
     .eq("user_id", data?.user?.id)
     .single()
 
@@ -21,7 +21,7 @@ export default async function Page() {
       <Header />
       <div className="w-full h-20 bg-transparent"></div>
 
-      <Acalendar name={name?.data?.name} email={data?.user?.email} />
+      <Acalendar name={user_data?.data?.name} email={data?.user?.email} phone={user_data?.data?.phone} />
       <div className="pb-28"></div>
       {/* <Footer /> */}
     </main>

@@ -2,18 +2,20 @@ import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server"
 
 export async function POST(request: Request) {
-  const { name, email, submitDate, barber, time } = await request.json()
+  const { name, email, submitDate, barber, time, phone } = await request.json()
 
   if (!name) {
-    return NextResponse.json({ error: "Name is undefined" }, { status: 400 })
+    return NextResponse.json({ error: "Name is required" }, { status: 400 })
   } else if (!email) {
-    return NextResponse.json({ error: "Email is undefined" }, { status: 400 })
+    return NextResponse.json({ error: "Email is required" }, { status: 400 })
   } else if (!submitDate) {
-    return NextResponse.json({ error: "Date is undefined" }, { status: 400 })
+    return NextResponse.json({ error: "Date is required" }, { status: 400 })
   } else if (!barber) {
-    return NextResponse.json({ error: "Barber is undefined" }, { status: 400 })
+    return NextResponse.json({ error: "Barber is required" }, { status: 400 })
   } else if (!time) {
-    return NextResponse.json({ error: "Time is undefined" }, { status: 400 })
+    return NextResponse.json({ error: "Time is required" }, { status: 400 })
+  } else if (!phone) {
+    return NextResponse.json({ error: "Phone Number is required" }, { status: 400 })
   }
 
   const supabase = await createClient();
@@ -24,6 +26,7 @@ export async function POST(request: Request) {
     name: name,
     email: email,
     barber_id: barber,
+    phone: phone,
   });
   if (error) {
     return NextResponse.json({ error: error }, { status: 400 })

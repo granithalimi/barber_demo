@@ -14,9 +14,10 @@ type Time = {
 type Props = {
   name: string | undefined;
   email: string | undefined;
+  phone: string | undefined;
 };
 
-export default function Acalendar({ name, email }: Props) {
+export default function Acalendar({ name, email, phone }: Props) {
   const [times, setTimes] = useState<Time[] | undefined>();
   const [showMessage, setShowMessage] = useState<boolean>(false);
   const [barbers, setBarbers] = useState<{ name: string; id: number }[]>();
@@ -29,36 +30,12 @@ export default function Acalendar({ name, email }: Props) {
   const maxDate = new Date();
   maxDate.setMonth(maxDate.getMonth() + 2);
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //
-  //   const supabase = createClient();
-  //   const submitDate = date.toLocaleDateString("en-CA");
-  //
-  //   try {
-  //     const { error } = await supabase.from("appointments").insert({
-  //       date: submitDate,
-  //       time: time,
-  //       status: "booked",
-  //       name: name,
-  //       email: email,
-  //       barber_id: barber,
-  //     });
-  //     if (error) throw error;
-  //     setShowMessage(true);
-  //     setDate(new Date());
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const submitDate = date.toLocaleDateString("en-CA");
     const response = await fetch("/api/auth-book", {
       method: "POST",
-      body: JSON.stringify({ name, email, submitDate, barber, time })
+      body: JSON.stringify({ name, email, submitDate, barber, time, phone })
     })
 
     const data = await response.json()
