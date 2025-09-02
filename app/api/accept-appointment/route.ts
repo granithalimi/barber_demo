@@ -84,7 +84,7 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         messaging_product: "whatsapp",
-        phone,
+        to: phone,
         type: "text",
         text: {
           body: `You’re booked in, looking sharp already ✂️
