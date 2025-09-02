@@ -2,6 +2,7 @@
 import { poppins } from "@/fonts/font";
 import { static_times } from "@/lib/helpers";
 import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -20,6 +21,7 @@ export default function Acalendar({ name, email }: Props) {
   const [times, setTimes] = useState<Time[] | undefined>();
   const [showMessage, setShowMessage] = useState<string>("");
   const [barbers, setBarbers] = useState<{ name: string; id: number }[]>();
+  const router = useRouter()
 
   // Submiting Data
   const [date, setDate] = useState<Date>(new Date());
@@ -30,24 +32,34 @@ export default function Acalendar({ name, email }: Props) {
   maxDate.setMonth(maxDate.getMonth() + 2);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     const submitDate = date.toLocaleDateString("en-CA");
     const response = await fetch("/api/auth-book", {
       method: "POST",
-      body: JSON.stringify({ name, email, submitDate, barber, time })
-    })
+      body: JSON.stringify({ name, email, submitDate, barber, time }),
+    });
 
-    const data = await response.json()
+    const data = await response.json();
     if (!response.ok) {
       setShowMessage(data.error);
-      return
+      return;
     }
 
     setShowMessage(data.message);
     setDate(new Date());
-  }
+  };
   const handleButtonClick = (clickedTime: string) => {
     setTime(clickedTime);
+  };
+
+  const handleClose = () => {
+    setShowMessage("");
+    if (
+      showMessage ==
+      "Appointment created successfully, We'll send you and email for approval✂️"
+    ) {
+      router.push("/my-appointments")
+    }
   };
 
   useEffect(() => {
@@ -114,10 +126,7 @@ export default function Acalendar({ name, email }: Props) {
         <h1 className="text-center">{showMessage}</h1>
         <button
           className="bg-black text-white px-3 py-1 rounded-lg hover:bg-gray-900"
-          onClick={() => {
-            setShowMessage("");
-            window.location.reload();
-          }}
+          onClick={() => handleClose()}
         >
           Close
         </button>
