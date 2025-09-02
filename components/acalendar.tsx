@@ -14,12 +14,11 @@ type Time = {
 type Props = {
   name: string | undefined;
   email: string | undefined;
-  phone: string | undefined;
 };
 
-export default function Acalendar({ name, email, phone }: Props) {
+export default function Acalendar({ name, email }: Props) {
   const [times, setTimes] = useState<Time[] | undefined>();
-  const [showMessage, setShowMessage] = useState<boolean>(false);
+  const [showMessage, setShowMessage] = useState<string>("");
   const [barbers, setBarbers] = useState<{ name: string; id: number }[]>();
 
   // Submiting Data
@@ -35,17 +34,16 @@ export default function Acalendar({ name, email, phone }: Props) {
     const submitDate = date.toLocaleDateString("en-CA");
     const response = await fetch("/api/auth-book", {
       method: "POST",
-      body: JSON.stringify({ name, email, submitDate, barber, time, phone })
+      body: JSON.stringify({ name, email, submitDate, barber, time })
     })
 
     const data = await response.json()
     if (!response.ok) {
-      console.log(data.error)
+      setShowMessage(data.error);
       return
     }
 
-    console.log(data.message)
-    setShowMessage(true);
+    setShowMessage(data.message);
     setDate(new Date());
   }
   const handleButtonClick = (clickedTime: string) => {
@@ -110,14 +108,14 @@ export default function Acalendar({ name, email, phone }: Props) {
         </div>
       )}
       <div
-        className={`${showMessage ? "fixed" : "hidden"} left-1/2 top-1/2 w-2/3 md:w-auto z-50 bg-white rounded-lg flex flex-col items-end gap-3 text-black px-6 py-4 shadow-black/80 shadow-lg`}
+        className={`${showMessage == "" ? "hidden" : "fixed"} left-1/2 top-1/2 w-2/3 md:w-auto z-50 bg-white rounded-lg flex flex-col items-end gap-3 text-black px-6 py-4 shadow-black/80 shadow-lg`}
         style={{ transform: "translate(-50%)" }}
       >
-        <h1 className="text-center">Appointment created successfully!</h1>
+        <h1 className="text-center">{showMessage}</h1>
         <button
           className="bg-black text-white px-3 py-1 rounded-lg hover:bg-gray-900"
           onClick={() => {
-            setShowMessage(false);
+            setShowMessage("");
             window.location.reload();
           }}
         >

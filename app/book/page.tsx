@@ -12,7 +12,7 @@ export default async function Page() {
 
   const user_data = await supabase
     .from("profiles")
-    .select("name, phone")
+    .select("name")
     .eq("user_id", data?.user?.id)
     .single()
 
@@ -21,7 +21,7 @@ export default async function Page() {
       <Header />
       <div className="w-full h-20 bg-transparent"></div>
 
-      <Acalendar name={user_data?.data?.name} email={data?.user?.email} phone={user_data?.data?.phone} />
+      <Acalendar name={user_data?.data?.name} email={data?.user?.email} />
       <div className="pb-28"></div>
       {/* <Footer /> */}
     </main>

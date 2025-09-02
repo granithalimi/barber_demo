@@ -13,13 +13,12 @@ type Time = {
 
 export default function Gcalendar() {
   const [times, setTimes] = useState<Time[] | undefined>();
-  const [showMessage, setShowMessage] = useState<boolean>(false);
+  const [showMessage, setShowMessage] = useState<string>("");
   const [barbers, setBarbers] = useState<{ name: string; id: number }[]>();
 
   // Submiting Data
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
   const [date, setDate] = useState<Date>(new Date());
   const [time, setTime] = useState<string>("");
   const [barber, setBarber] = useState<string | null>();
@@ -27,22 +26,23 @@ export default function Gcalendar() {
   const maxDate = new Date();
   maxDate.setMonth(maxDate.getMonth() + 2);
 
-  const handleSubmit = async (e:React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
     const submitDate = date.toLocaleDateString("en-CA");
     const response = await fetch("/api/guest-book", {
       method: "POST",
-      body: JSON.stringify({ name, email, phone, submitDate, time, barber }),
+      body: JSON.stringify({ name, email, submitDate, time, barber }),
     });
 
+    const data = await response.json();
     if (!response.ok) {
-      const data = await response.json()
       console.log("error", data.error);
+      setShowMessage(data.error);
       return;
     }
 
-    setShowMessage(true);
+    setShowMessage(data.message);
     setDate(new Date());
   };
 
@@ -108,15 +108,20 @@ export default function Gcalendar() {
         </div>
       )}
       <div
-        className={`${showMessage ? "fixed" : "hidden"} left-1/2 top-1/2 w-2/3 md:w-auto z-50 bg-white rounded-lg flex flex-col items-end gap-3 text-black px-6 py-4 shadow-black/80 shadow-lg`}
+        className={`${showMessage == "" ? "hidden" : "fixed"} left-1/2 top-1/2 w-2/3 md:w-auto z-50 bg-white rounded-lg flex flex-col items-end gap-3 text-black px-6 py-4 shadow-black/80 shadow-lg`}
         style={{ transform: "translate(-50%)" }}
       >
-        <h1 className="text-center">Appointment created successfully!</h1>
+        <h1 className="text-center">{showMessage}</h1>
         <button
           className="bg-black text-white px-3 py-1 rounded-lg hover:bg-gray-900"
           onClick={() => {
-            setShowMessage(false);
-            window.location.reload();
+            setShowMessage("");
+            if (
+              showMessage ==
+              "Appointment created successfully, We'll send you and email for approval✂️"
+            ) {
+              window.location.reload();
+            }
           }}
         >
           Close
@@ -213,17 +218,6 @@ export default function Gcalendar() {
                   placeholder="john@example.com"
                   className="py-1 px-2 rounded-lg bg-transparent border border-white w-full"
                   onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="flex flex-col w-full">
-                <label>Phone:</label>
-                <input
-                  id="phone"
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+389 123456789"
-                  className="py-1 px-2 rounded-lg bg-transparent border border-white w-full"
                 />
               </div>
 

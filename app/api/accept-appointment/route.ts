@@ -54,7 +54,7 @@ export async function POST(request: Request) {
 
   const app = await supabase
     .from("appointments")
-    .select("email, name, date, time, phone")
+    .select("email, name, date, time")
     .eq("id", id)
     .single();
 
@@ -62,7 +62,6 @@ export async function POST(request: Request) {
   const name = app?.data?.name;
   const date = app?.data?.date;
   const time = app?.data?.time;
-  const phone = app?.data?.phone;
 
   // Send email
   const email_sent = await resend.emails.send({
@@ -73,29 +72,6 @@ export async function POST(request: Request) {
   });
 
   if (email_sent.error) console.log(email_sent.error);
-
-  await fetch(
-    `https://graph.facebook.com/v17.0/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`,
-    {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        messaging_product: "whatsapp",
-        to: phone,
-        type: "text",
-        text: {
-          body: `You’re booked in, looking sharp already ✂️
-            Hey ${name},
-            Your appointment at Snap Barbershop has been accepted. We can’t wait to give you a fresh cut that’ll have you walking out feeling brand new.
-            📅 Date:${date}
-            ⏰ Time:${time}
-            `},
-      }),
-    }
-  );
 
   return NextResponse.json(
     { message: "Appointment accepted" },

@@ -23,7 +23,6 @@ export function SignUpForm({
 }: React.ComponentPropsWithoutRef<"div">) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -55,7 +54,6 @@ export function SignUpForm({
           user_id: data?.user?.id,
           name: name,
           role: "client",
-          phone: phone,
         });
         if (users.error) throw error;
       }
@@ -108,17 +106,6 @@ export function SignUpForm({
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="phone">Phone</Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  placeholder="+389 123456789"
-                  required
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
                 />
               </div>
               <div className="grid gap-2">

@@ -15,7 +15,6 @@ export default async function Page() {
     .eq("email", email.data?.user?.email);
   if (error) console.log(error);
 
-  if (data) console.log(data);
   return (
     <main className="bg-gradient-to-tl from-gray-900 to-gray-800 min-h-screen">
       <Header />

@@ -2,18 +2,18 @@ import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const { name, email, phone, submitDate, time, barber } = await request.json();
+  const { name, email, submitDate, time, barber } = await request.json();
 
   if (!name || typeof name !== "string") {
-    return NextResponse.json({ error: "Name is Required" }, { status: 400 });
+    return NextResponse.json({ error: "Name is Required!" }, { status: 400 });
   } else if (!email || typeof email !== "string") {
-    return NextResponse.json({ error: "Email is Required" }, { status: 400 });
+    return NextResponse.json({ error: "Email is Required!" }, { status: 400 });
   } else if (!submitDate) {
-    return NextResponse.json({ error: "Date is Required" }, { status: 400 });
+    return NextResponse.json({ error: "Date is Required!" }, { status: 400 });
   } else if (!time) {
-    return NextResponse.json({ error: "Time is Required" }, { status: 400 });
+    return NextResponse.json({ error: "Time is Required!" }, { status: 400 });
   } else if (!barber) {
-    return NextResponse.json({ error: "Barber is Required" }, { status: 400 });
+    return NextResponse.json({ error: "Barber is Required!" }, { status: 400 });
   }
 
   const supabase = await createClient();
@@ -24,7 +24,6 @@ export async function POST(request: Request) {
       status: "booked",
       name: name,
       email: email,
-      phone: phone,
       barber_id: barber,
     });
     if (error) throw error;
@@ -36,7 +35,10 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json(
-    { message: "Appointment created successfully" },
+    {
+      message:
+        "Appointment created successfully, We'll send you and email for approval✂️",
+    },
     { status: 200 },
   );
 }
