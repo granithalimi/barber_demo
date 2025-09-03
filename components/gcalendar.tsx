@@ -108,10 +108,12 @@ export default function Gcalendar() {
         </div>
       )}
       <div
-        className={`${showMessage == "" ? "hidden" : "fixed"} left-1/2 top-1/2 w-2/3 md:w-auto z-50 bg-white rounded-lg flex flex-col items-end gap-3 text-black px-6 py-4 shadow-black/80 shadow-lg`}
+        className={`${showMessage !== "" ? "show-message z-20" : "-z-10"} hide-message fixed left-1/2 top-1/2 w-2/3 md:w-auto bg-white rounded-lg flex flex-col items-end gap-3 text-black px-6 py-4 shadow-black/80 shadow-lg`}
         style={{ transform: "translate(-50%)" }}
       >
-        <h1 className="text-center">{showMessage}</h1>
+        <div className="flex justify-center w-full">
+          <h1 className="text-center">{showMessage}</h1>
+        </div>
         <button
           className="bg-black text-white px-3 py-1 rounded-lg hover:bg-gray-900"
           onClick={() => {

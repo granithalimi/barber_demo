@@ -118,6 +118,20 @@
   transition: 300ms;
 }
 
+.hide-message{
+  z-index: -99;
+  opacity: 0;
+  filter: blur(5px);
+  transition: 500ms;
+}
+
+.show-message{
+  z-index: 99;
+  opacity: 1;
+  filter: blur(0);
+  transition: 500ms;
+}
+
 .react-calendar button{
   border-radius: 5px;
 }
