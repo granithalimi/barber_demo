@@ -176,19 +176,26 @@
   transform: translateX(-70%);
 }
 
-.show-text {
-  opacity: 1;
-  filter: blur(0);
-  transform: translateX(0);
-}
-
 .hide-text2 {
   opacity: 0;
   filter: blur(15px);
   transform: translateX(70%);
 }
-.show-text2 {
+
+.hide-text3 {
+  opacity: 0;
+  filter: blur(15px);
+  transform: translateY(100%);
+}
+
+.hide-content {
+  opacity: 0;
+  filter: blur(15px);
+  transform: translateY(30%);
+}
+
+.show-text {
   opacity: 1;
   filter: blur(0);
-  transform: translateX(0);
+  transform: translate(0);
 }

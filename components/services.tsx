@@ -1,17 +1,31 @@
+'use client'
+
+import { useInView } from "react-intersection-observer";
+
 export default function Services(){
+  const [refServicesText, inViewServices] = useInView({
+    threshold: 1,
+    triggerOnce: true,
+  });
+
+  const [refServicesContent, inViewServicesContent] = useInView({
+    threshold: 0,
+    triggerOnce: true,
+  });
+
   return (
-    <section id="services" className="py-20 bg-barber-dark">
+    <section id="services" className="py-20 bg-barber-dark" >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Our Services</h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+        <div className="text-center mb-16" ref={refServicesText}>
+          <h2 className={`${inViewServices ? "show-text" : ""} hide-text3 text-4xl md:text-5xl font-bold mb-4 duration-500`}>Our Services</h2>
+          <p className={`${inViewServices ? "show-text" : ""} hide-text3 text-gray-400 text-lg max-w-2xl mx-auto duration-500`}>
             Professional grooming services tailored to your style and
             preferences
           </p>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 cursor-default">
+        <div ref={refServicesContent} className={`${inViewServicesContent ? "show-text" : ""} hide-content grid md:grid-cols-2 lg:grid-cols-3 gap-8 cursor-default duration-500`}>
           <div
-            className="bg-barber-gray p-8 rounded-lg hover:transform hover:scale-105 transition-transform"
+            className={`bg-barber-gray p-8 rounded-lg hover:transform hover:scale-105 transition-transform`}
           >
             <div className="text-barber-gold text-4xl mb-4">
               <i className="fas fa-cut"></i>

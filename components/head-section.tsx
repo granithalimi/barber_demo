@@ -12,7 +12,7 @@ export default function HeadSection() {
   };
 
   const [refSection, inViewSection] = useInView({
-    threshold: 0.5,
+    threshold: 0,
     triggerOnce: true,
   });
 
@@ -44,7 +44,7 @@ export default function HeadSection() {
           <p className={`${inViewSection ? "show-text" : ""} hide-text text-xl md:text-2xl text-gray-300 mb-8 duration-1000`}>
             Where Style Meets Precision
           </p>
-          <p className={`${inViewSection ? "show-text2" : ""} hide-text2 text-lg text-gray-400 mb-12 max-w-2xl mx-auto duration-1000`}>
+          <p className={`${inViewSection ? "show-text" : ""} hide-text2 text-lg text-gray-400 mb-12 max-w-2xl mx-auto duration-1000`}>
             Experience the finest grooming services with our expert barbers.
             From classic cuts to modern styles, we deliver excellence in every
             detail.
@@ -53,7 +53,7 @@ export default function HeadSection() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="#services"
-            className="bg-gray-900 text-white px-8 py-4 rounded-lg font-semibold hover:bg-gray-950 transition-colors duration-500"
+            className="bg-gray-800 text-white px-8 py-4 rounded-lg font-semibold hover:bg-gray-900 transition-colors duration-500"
           >
             View Services
           </Link>
