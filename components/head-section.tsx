@@ -1,24 +1,55 @@
+"use client";
 import Link from "next/link";
+import { useState } from "react";
+import Image from "next/image";
+import { useInView } from "react-intersection-observer";
 
-export default function HeadSection(){
+export default function HeadSection() {
+  const [, setImageLoaded] = useState(false);
+
+  const handleImageLoad = () => {
+    setImageLoaded(true);
+  };
+
+  const [refSection, inViewSection] = useInView({
+    threshold: 0.5,
+    triggerOnce: true,
+  });
+
   return (
     <section
       id="home"
-      className="relative h-screen flex items-center justify-center bg-gradient-to-tl from-gray-900 to-gray-600"
+      className="relative h-screen flex items-center justify-center overflow-x-hidden"
+      ref={refSection}
     >
-      <div className="absolute inset-0 bg-black/50"></div>
-      <div className="relative z-10 text-center max-w-4xl mx-auto px-4">
-        <h1 className="text-5xl md:text-7xl font-bold mb-6">
+      <Image
+        src="/images/bg.png"
+        alt="Background"
+        fill
+        priority
+        onLoad={handleImageLoad}
+        style={{
+          objectFit: "cover",
+          zIndex: -1,
+        }}
+      />
+      <div className="absolute inset-0 bg-black/60"></div>
+      <div className={`relative z-10 text-center max-w-4xl mx-auto px-4`}>
+        <h1
+          className={`${inViewSection ? "show-text" : ""} hide-text text-5xl md:text-7xl font-bold mb-6 duration-1000`}
+        >
           <span className="text-white">Barber</span>
           <span className="text-gray-600">Shop</span>
         </h1>
-        <p className="text-xl md:text-2xl text-gray-300 mb-8">
-          Where Style Meets Precision.
-        </p>
-        <p className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto">
-          Experience the finest grooming services with our expert barbers. From
-          classic cuts to modern styles, we deliver excellence in every detail.
-        </p>
+          <p className={`${inViewSection ? "show-text" : ""} hide-text text-xl md:text-2xl text-gray-300 mb-8 duration-1000`}>
+            Where Style Meets Precision
+          </p>
+          <p className={`${inViewSection ? "show-text2" : ""} hide-text2 text-lg text-gray-400 mb-12 max-w-2xl mx-auto duration-1000`}>
+            Experience the finest grooming services with our expert barbers.
+            From classic cuts to modern styles, we deliver excellence in every
+            detail.
+          </p>
+        {/* </div> */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="#services"
@@ -40,5 +71,5 @@ export default function HeadSection(){
         </Link>
       </div>
     </section>
-  )
+  );
 }

@@ -103,14 +103,15 @@
   animation: slideDown 1000ms ease-out;
 }
 
-.hide-menu{
+.hide-menu {
   top: 0;
   left: 100%;
   opacity: 0;
   filter: blur(5px);
   transition: 300ms;
 }
-.show-menu{
+
+.show-menu {
   top: 0;
   left: 0;
   opacity: 1;
@@ -118,26 +119,26 @@
   transition: 300ms;
 }
 
-.hide-message{
+.hide-message {
   z-index: -99;
   opacity: 0;
   filter: blur(5px);
   transition: 500ms;
 }
 
-.show-message{
+.show-message {
   z-index: 99;
   opacity: 1;
   filter: blur(0);
   transition: 500ms;
 }
 
-.react-calendar button{
+.react-calendar button {
   border-radius: 5px;
 }
 
 .react-calendar__tile--active,
-.react-calendar button:hover{
+.react-calendar button:hover {
   background-color: #38a169 !important;
   scale: 115%;
   transition: 300ms;
@@ -145,7 +146,7 @@
 }
 
 .react-calendar button:disabled,
-.react-calendar button:disabled:hover{
+.react-calendar button:disabled:hover {
   border-radius: 0;
   background-color: #1f1f1f !important;
   scale: 100%;
@@ -153,12 +154,41 @@
   cursor: not-allowed;
 }
 
-.react-calendar__tile--now{
+.react-calendar__tile--now {
   background-color: yellow !important;
   color: black !important;
 }
 
 .react-calendar__navigation__arrow,
-.react-calendar__navigation__label{
+.react-calendar__navigation__label {
   background-color: transparent !important;
+}
+
+.section {
+  background-image: url("/images/bg.png");
+  background-size: cover;
+  background-position: center;
+}
+
+.hide-text {
+  opacity: 0;
+  filter: blur(15px);
+  transform: translateX(-70%);
+}
+
+.show-text {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateX(0);
+}
+
+.hide-text2 {
+  opacity: 0;
+  filter: blur(15px);
+  transform: translateX(70%);
+}
+.show-text2 {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateX(0);
 }
