@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, LayoutDashboard, Menu, X } from "lucide-react";
+import { ArrowUp, Calendar, LayoutDashboard, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import "@/app/globals.css";
@@ -10,6 +10,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 
 export default function Header() {
+  const [scrolledDown, setScrolledDown] = useState(false);
   const [show, setShow] = useState(false);
   const [auth, setAuth] = useState(false);
   const [role, setRole] = useState("");
@@ -39,12 +40,31 @@ export default function Header() {
     checkUser();
   });
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolledDown(window.scrollY > 300);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleClick = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const logout = async () => {
     await supabase.auth.signOut();
     router.push("/auth/login");
   };
   return (
     <>
+      <button
+        onClick={() => handleClick()}
+        className={`${scrolledDown ? "block show-arrow" : "hide-arrow"} fixed p-5 rounded-full bg-white shadow-black/20 shadow-lg bottom-5 right-5 hover:bg-gray-400`}
+      >
+        <ArrowUp className="text-3xl text-black" />
+      </button>
       <nav className="fixed w-full z-50 bg-black/90 backdrop-blur-sm shadow-black/30 shadow-lg header">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
