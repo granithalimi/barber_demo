@@ -61,7 +61,7 @@ export default function Header() {
     <>
       <button
         onClick={() => handleClick()}
-        className={`${scrolledDown ? "block show-arrow" : "hide-arrow"} fixed p-5 rounded-full bg-white shadow-black/20 shadow-lg bottom-5 right-5 hover:bg-gray-400`}
+        className={`${scrolledDown ? "block show-arrow" : "hide-arrow"} fixed z-50 p-5 rounded-full bg-white shadow-black/20 shadow-lg bottom-5 right-5 hover:bg-gray-400`}
       >
         <ArrowUp className="text-3xl text-black" />
       </button>
