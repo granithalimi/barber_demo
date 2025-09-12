@@ -33,7 +33,7 @@ export default function HeadSection() {
           zIndex: -1,
         }}
       />
-      <div className="absolute inset-0 bg-black/60"></div>
+      <div className="absolute inset-0 bg-black/40"></div>
       <div className={`relative z-10 text-center max-w-4xl mx-auto px-4`}>
         <h1
           className={`${inViewSection ? "show-text" : ""} hide-text text-5xl md:text-7xl font-bold mb-6 duration-1000`}
