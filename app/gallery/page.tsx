@@ -3,12 +3,13 @@ import Header from "@/components/header/header";
 import { montserrat } from "@/fonts/font";
 import { createClient } from "@/lib/supabase/client";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Page() {
   const [imgs, setImgs] = useState<string[]>();
   const [singleImage, setSingleImage] = useState<string>("");
   const [role, setRole] = useState<string>("");
+  const imageRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     async function getRole() {
@@ -63,6 +64,28 @@ export default function Page() {
       window.location.reload();
     }
   };
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const formData = new FormData();
+    Array.from(files).forEach((file) => {
+      formData.append("images", file);
+    });
+
+    const response = await fetch("/api/upload-gallery", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.ok) {
+      window.location.reload();
+    } else {
+      console.error("Upload failed");
+      alert("Failed to upload images. Please try again.");
+    }
+  };
   return (
     <main className="bg-gradient-to-tl from-gray-900 to-gray-800 min-h-screen">
       <Header />
@@ -73,12 +96,44 @@ export default function Page() {
         Gallery
       </h1>
 
+      {role == "admin" && (
+        <form
+          method="POST"
+          className="mx-auto w-11/12 md:w-2/3 mb-10 flex justify-center gap-3"
+          encType="multipart/form-data"
+        >
+          <input
+            type="file"
+            multiple
+            ref={imageRef}
+            hidden
+            accept="image/jpeg,image/png,image/gif,image/webp"
+            onChange={(e) => handleImageChange(e)}
+          />
+          <button
+            type="button"
+            onClick={() => imageRef.current?.click()}
+            className="text-white px-4 py-1 rounded-lg bg-gray-950 hover:bg-gray-900 duration-300"
+          >
+            Select Images
+          </button>
+          <button
+            type="submit"
+            className="text-white px-4 py-1 rounded-lg bg-gray-950 hover:bg-gray-900 duration-300"
+          >
+            Submit
+          </button>
+        </form>
+      )}
+
       <button
         onClick={() => setSingleImage("")}
-        className={`${singleImage == "" ? "hidden" : ""} z-50 fixed top-0 left-0 w-full h-screen bg-transparent`}
+        className={`${singleImage == "" ? "hidden" : ""
+          } z-50 fixed top-0 left-0 w-full h-screen bg-transparent`}
       ></button>
       <div
-        className={`${singleImage == "" ? "hidden" : ""} fixed top-1/2 left-1/2 h-96 w-80 md:w-1/2 md:h-auto lg:w-1/4 rounded-lg border-white border-4 shadow-black/60 shadow-lg`}
+        className={`${singleImage == "" ? "hidden" : ""
+          } fixed top-1/2 left-1/2 h-96 w-80 md:w-1/2 md:h-auto lg:w-1/4 rounded-lg border-white border-4 shadow-black/60 shadow-lg`}
         style={{ transform: "translate(-50%, -50%)" }}
       >
         {singleImage != "" && (
