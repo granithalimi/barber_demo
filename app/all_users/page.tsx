@@ -25,7 +25,7 @@ export default async function Page() {
     .order("id", { ascending: true });
 
   return (
-    <main className="bg-gradient-to-tl from-gray-900 to-gray-800 min-h-screen">
+    <main className="bg-gradient-to-tl from-gray-900 to-gray-800 min-h-screen text-white">
       <Header />
       <div className="w-full h-20 bg-transparent"></div>
 

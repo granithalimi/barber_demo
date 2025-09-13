@@ -125,9 +125,9 @@ export default function Header() {
             </div>
             <div className="md:hidden">
               {show ? (
-                <X onClick={() => setShow((p) => !p)} />
+                <X className="text-white" onClick={() => setShow((p) => !p)} />
               ) : (
-                <Menu onClick={() => setShow((p) => !p)} />
+                <Menu className="text-white" onClick={() => setShow((p) => !p)} />
               )}
             </div>
           </div>
