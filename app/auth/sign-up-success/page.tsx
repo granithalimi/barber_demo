@@ -12,7 +12,7 @@ export default function Page() {
       <div className="absolute inset-0 bg-black/50"></div>
       <div className="w-full max-w-sm z-10">
         <div className="flex flex-col gap-6">
-          <Card>
+          <Card className="text-white">
             <CardHeader>
               <CardTitle className="text-2xl">
                 Thank you for signing up!

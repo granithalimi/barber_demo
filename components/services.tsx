@@ -14,16 +14,16 @@ export default function Services(){
   });
 
   return (
-    <section id="services" className="py-20 bg-barber-dark" >
+    <section id="services" className="py-20" >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16" ref={refServicesText}>
-          <h2 className={`${inViewServices ? "show-text" : ""} hide-text3 text-4xl md:text-5xl font-bold mb-4 duration-500`}>Our Services</h2>
+          <h2 className={`${inViewServices ? "show-text" : ""} hide-text3 text-white text-4xl md:text-5xl font-bold mb-4 duration-500`}>Our Services</h2>
           <p className={`${inViewServices ? "show-text" : ""} hide-text3 text-gray-400 text-lg max-w-2xl mx-auto duration-500`}>
             Professional grooming services tailored to your style and
             preferences
           </p>
         </div>
-        <div ref={refServicesContent} className={`${inViewServicesContent ? "show-text" : ""} hide-content grid md:grid-cols-2 lg:grid-cols-3 gap-8 cursor-default duration-500`}>
+        <div ref={refServicesContent} className={`${inViewServicesContent ? "show-text" : ""} hide-content text-white grid md:grid-cols-2 lg:grid-cols-3 gap-8 cursor-default duration-500`}>
           <div
             className={`bg-barber-gray p-8 rounded-lg hover:transform hover:scale-105 transition-transform`}
           >

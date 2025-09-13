@@ -33,7 +33,7 @@ export default function About() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 ref={refAboutTitle} className={`${inViewAboutTitle ? "show-text" : ""} hide-text3 text-4xl md:text-5xl font-bold mb-6 duration-500`}>
+            <h2 ref={refAboutTitle} className={`${inViewAboutTitle ? "show-text" : ""} hide-text3 text-white text-4xl md:text-5xl font-bold mb-6 duration-500`}>
               About BarberShop
             </h2>
             <p ref={refAboutText} className={`${inViewAboutText ? "show-text" : ""} hide-text3 text-gray-400 text-lg mb-6 duration-500`}>
@@ -46,9 +46,9 @@ export default function About() {
               creating a welcoming atmosphere where every client feels like
               family.
             </p>
-            <div ref={refAboutContent} className={`${inViewAboutContent ? "show-text" : ""} hide-text3 grid grid-cols-2 gap-6 duration-500`}>
+            <div ref={refAboutContent} className={`${inViewAboutContent ? "show-text" : ""} hide-text3 text-white grid grid-cols-2 gap-6 duration-500`}>
               <div className="text-center">
-                <div className="text-3xl font-bold text-barber-gold mb-2">
+                <div className="text-3xl font-bold mb-2">
                   13+
                 </div>
                 <div className="text-gray-400">Years Experience</div>
@@ -74,7 +74,7 @@ export default function About() {
             </div>
           </div>
           <div ref={refAboutContent2} className={`${inViewAboutContent2 ? "show-text" : ""} hide-content relative duration-500`}>
-            <div className="bg-barber-gold p-1 rounded-lg">
+            <div className="bg-barber-gold p-1 rounded-lg text-white">
               <div className="bg-gray-900 rounded-lg p-8">
                 <h3 className="text-2xl font-bold mb-6 text-center">
                   Why Choose Us?

@@ -102,13 +102,13 @@ export default function Acalendar({ name, email }: Props) {
   }, [date, barber]);
 
   return (
-    <div className="mt-10 flex flex-col items-center">
+    <div className="mt-10 flex flex-col items-center text-white">
       {barbers && barbers.length > 0 && (
         <div className={`flex items-center gap-3 mb-3`}>
           <h1 className={`${poppins.className} py-1`}>Select your Barber:</h1>
           <select
             onChange={(e) => setBarber(e.target.value)}
-            className="py-1 px-3 rounded-lg"
+            className="py-1 px-3 rounded-lg text-gray-400"
           >
             <option>---</option>
             {barbers.map((b, ind) => (

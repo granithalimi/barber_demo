@@ -27,47 +27,53 @@ export default function AllAppointments({
   }, [apps]);
 
   const handleDelete = async (id: number) => {
-    try {
-      const response = await fetch("/api/delete-appointment", {
-        method: "DELETE",
-        body: JSON.stringify({ id }),
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+    if (confirm("Are you sure you want to delete this Appointment?")) {
+      try {
+        const response = await fetch("/api/delete-appointment", {
+          method: "DELETE",
+          body: JSON.stringify({ id }),
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        window.location.reload();
+      } catch (err) {
+        console.error(err);
       }
-      window.location.reload()
-    } catch (err) {
-      console.error(err);
     }
   };
 
   const handleAccept = async (id: number) => {
-    try {
-      const response = await fetch("/api/accept-appointment", {
-        method: "POST",
-        body: JSON.stringify({ id }),
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+    if (confirm("Are you sure you want to accept this Appointment?")) {
+      try {
+        const response = await fetch("/api/accept-appointment", {
+          method: "POST",
+          body: JSON.stringify({ id }),
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        window.location.reload();
+      } catch (error) {
+        console.error(error);
       }
-      window.location.reload();
-    } catch (error) {
-      console.error(error);
     }
   };
 
   const handleDecline = async (id: number) => {
-    try {
-      const response = await fetch("/api/decline-appointment", {
-        method: "POST",
-        body: JSON.stringify({ id }),
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+    if (confirm("Are you sure you want to delete this Appointment?")) {
+      try {
+        const response = await fetch("/api/decline-appointment", {
+          method: "POST",
+          body: JSON.stringify({ id }),
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        window.location.reload();
+      } catch (error) {
+        console.error(error);
       }
-      window.location.reload();
-    } catch (error) {
-      console.error(error);
     }
   };
   return (

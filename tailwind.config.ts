@@ -11,6 +11,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        graySoft: "#f4f6f8",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
