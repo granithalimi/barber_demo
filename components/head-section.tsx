@@ -59,7 +59,7 @@ export default function HeadSection() {
           </Link>
           <Link
             href={"/book"}
-            className="border-2 border-barber-gold text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-black duration-500"
+            className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-black duration-500"
           >
             Book Appointment
           </Link>
