@@ -3,6 +3,7 @@ import HeadSection from "@/components/head-section";
 import Services from "@/components/services";
 import About from "@/components/about";
 import Footer from "@/components/footer";
+import Gallery from "@/components/gallery";
 
 export default async function Home() {
   return (
@@ -11,6 +12,7 @@ export default async function Home() {
       <HeadSection />
       <Services />
       <About />
+      <Gallery />
       <Footer />
     </main>
   );

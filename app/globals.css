@@ -103,6 +103,10 @@
   background-color: #0a0a0a !important;
 }
 
+#gallery{
+  background-color: #0a0a0a !important;
+}
+
 .header {
   animation: slideDown 1000ms ease-out;
 }
