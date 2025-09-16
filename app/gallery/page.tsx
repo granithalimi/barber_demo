@@ -9,6 +9,7 @@ export default function Page() {
   const [imgs, setImgs] = useState<string[]>();
   const [singleImage, setSingleImage] = useState<string>("");
   const [role, setRole] = useState<string>("");
+  const [uploadingStatus, setUploadingStatus] = useState<boolean>(false);
   const imageRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -66,6 +67,7 @@ export default function Page() {
   };
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUploadingStatus(true);
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
@@ -84,6 +86,7 @@ export default function Page() {
     } else {
       console.error("Upload failed");
       alert("Failed to upload images. Please try again.");
+      setUploadingStatus(false);
     }
   };
   return (
@@ -115,13 +118,7 @@ export default function Page() {
             onClick={() => imageRef.current?.click()}
             className="text-white px-4 py-1 rounded-lg bg-gray-950 hover:bg-gray-900 duration-300"
           >
-            Select Images
-          </button>
-          <button
-            type="submit"
-            className="text-white px-4 py-1 rounded-lg bg-gray-950 hover:bg-gray-900 duration-300"
-          >
-            Submit
+            {uploadingStatus ? "Uploading..." : "Select Images"}
           </button>
         </form>
       )}
