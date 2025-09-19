@@ -52,6 +52,18 @@ export async function POST(request: Request) {
     });
   }
 
+  const calendar_apps = await supabase
+    .from("calendar_appointments")
+    .update({ status: "accepted" })
+    .eq("app_id", id);
+
+  if (calendar_apps.error) {
+    return NextResponse.json({
+      message: "Updating error",
+      status: 400,
+    });
+  }
+
   const app = await supabase
     .from("appointments")
     .select("email, name, date, time")

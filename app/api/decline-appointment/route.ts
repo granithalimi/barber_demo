@@ -40,12 +40,26 @@ export async function POST(request: Request) {
     .from("appointments")
     .update({ status: "booked" })
     .eq("id", id);
+
   if (error) {
     return NextResponse.json({
       message: "Updating error",
       status: 400,
     });
   }
+
+  const calendar_apps = await supabase
+    .from("calendar_appointments")
+    .update({ status: "booked" })
+    .eq("app_id", id);
+
+  if (calendar_apps.error) {
+    return NextResponse.json({
+      message: "Updating error",
+      status: 400,
+    });
+  }
+
   return NextResponse.json(
     { receivedId: id, message: "Appointment Declined" },
     { status: 200 },

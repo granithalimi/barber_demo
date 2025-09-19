@@ -18,15 +18,28 @@ export async function POST(request: Request) {
 
   const supabase = await createClient();
   try {
-    const { error } = await supabase.from("appointments").insert({
+    const { data, error } = await supabase
+      .from("appointments")
+      .insert({
+        date: submitDate,
+        time: time,
+        status: "booked",
+        name: name,
+        email: email,
+        barber_id: barber,
+      })
+      .select();
+    if (error) throw error;
+
+    const calendar_apps = await supabase.from("calendar_appointments").insert({
       date: submitDate,
       time: time,
       status: "booked",
-      name: name,
-      email: email,
       barber_id: barber,
+      app_id: data[0].id
     });
-    if (error) throw error;
+
+    if (calendar_apps?.error) throw calendar_apps.error;
   } catch (error) {
     return NextResponse.json(
       { message: "Something went Wrong", error: error },

@@ -17,15 +17,32 @@ export async function POST(request: Request) {
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.from("appointments").insert({
+  const { data, error } = await supabase
+    .from("appointments")
+    .insert({
+      date: submitDate,
+      time: time,
+      status: "booked",
+      name: name,
+      email: email,
+      barber_id: barber,
+    })
+    .select();
+
+  if (error) {
+    return NextResponse.json({ error: error }, { status: 400 });
+  }
+
+  // Create Calendar Apps
+  const calendar_apps = await supabase.from("calendar_appointments").insert({
     date: submitDate,
     time: time,
     status: "booked",
-    name: name,
-    email: email,
     barber_id: barber,
+    app_id: data[0].id,
   });
-  if (error) {
+
+  if (calendar_apps?.error) {
     return NextResponse.json({ error: error }, { status: 400 });
   }
 

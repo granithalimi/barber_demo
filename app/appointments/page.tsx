@@ -55,12 +55,12 @@ export default async function Page() {
   const papps =
     data?.role == "admin"
       ? await supabase
-        .from("appointments")
+        .from("calendar_appointments")
         .select("*, profiles(name)")
         .lt("date", today)
         .order("time", { ascending: true })
       : await supabase
-        .from("appointments")
+        .from("calendar_appointments")
         .select("*, profiles(name)")
         .lt("date", today)
         .eq("barber_id", data?.id)

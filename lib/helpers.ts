@@ -1,6 +1,18 @@
 export const static_times = [
   {
+    time: "09:00:00",
+    status: "pending",
+  },
+  {
+    time: "09:30:00",
+    status: "pending",
+  },
+  {
     time: "10:00:00",
+    status: "pending",
+  },
+  {
+    time: "10:30:00",
     status: "pending",
   },
   {
@@ -8,7 +20,15 @@ export const static_times = [
     status: "pending",
   },
   {
+    time: "11:30:00",
+    status: "pending",
+  },
+  {
     time: "12:00:00",
+    status: "pending",
+  },
+  {
+    time: "12:30:00",
     status: "pending",
   },
   {
@@ -16,7 +36,15 @@ export const static_times = [
     status: "pending",
   },
   {
+    time: "13:30:00",
+    status: "pending",
+  },
+  {
     time: "14:00:00",
+    status: "pending",
+  },
+  {
+    time: "14:30:00",
     status: "pending",
   },
   {
@@ -24,7 +52,15 @@ export const static_times = [
     status: "pending",
   },
   {
+    time: "15:30:00",
+    status: "pending",
+  },
+  {
     time: "16:00:00",
+    status: "pending",
+  },
+  {
+    time: "16:30:00",
     status: "pending",
   },
   {
@@ -32,7 +68,15 @@ export const static_times = [
     status: "pending",
   },
   {
+    time: "17:30:00",
+    status: "pending",
+  },
+  {
     time: "18:00:00",
+    status: "pending",
+  },
+  {
+    time: "18:30:00",
     status: "pending",
   },
   {

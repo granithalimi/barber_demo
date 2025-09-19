@@ -119,7 +119,7 @@ export default function Header() {
                   href={"/auth/login"}
                   className="hover:text-white duration-500"
                 >
-                  SignIn
+                  Sign In
                 </Link>
               )}
             </div>
@@ -189,7 +189,7 @@ export default function Header() {
               href={"auth/login"}
               className={`${poppins.className} hover:text-white w-11/12 mx-auto border-b border-gray-400 text-start duration-500`}
             >
-              Signin
+              Sign in
             </Link>
           )}
         </div>

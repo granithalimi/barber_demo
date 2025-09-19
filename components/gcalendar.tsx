@@ -56,7 +56,7 @@ export default function Gcalendar() {
     setTimes(static_times);
     async function fetchData() {
       const { data } = await supabase
-        .from("appointments")
+        .from("calendar_appointments")
         .select("time, status")
         .eq("date", fetchingDate)
         .eq("barber_id", barber);
