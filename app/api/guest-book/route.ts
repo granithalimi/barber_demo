@@ -1,9 +1,10 @@
-import { static_services } from "@/lib/helpers";
+import { add30Minutes, static_services } from "@/lib/helpers";
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const { name, email, submitDate, time, barber, service } = await request.json();
+  const { name, email, submitDate, time, barber, service } =
+    await request.json();
 
   if (!name || typeof name !== "string") {
     return NextResponse.json({ error: "Name is Required!" }, { status: 400 });
@@ -16,12 +17,16 @@ export async function POST(request: Request) {
   } else if (!barber) {
     return NextResponse.json({ error: "Barber is Required!" }, { status: 400 });
   } else if (!service) {
-    return NextResponse.json({ error: "Service is Required!" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Service is Required!" },
+      { status: 400 },
+    );
   }
 
   const supabase = await createClient();
-  const single_service = static_services.find(s => s.id == service)
+  const single_service = static_services.find((s) => s.id == service);
 
+  add30Minutes(time, 3);
   try {
     const { data, error } = await supabase
       .from("appointments")
@@ -37,15 +42,28 @@ export async function POST(request: Request) {
       .select();
     if (error) throw error;
 
-    const calendar_apps = await supabase.from("calendar_appointments").insert({
-      date: submitDate,
-      time: time,
-      status: "booked",
-      barber_id: barber,
-      app_id: data[0].id
-    });
+    // Calendar Apps
+    let [hours, minutes, seconds] = time.split(":").map(Number);
+    for (let i = 0; i < Number(single_service?.time); i++) {
+      const res = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
 
-    if (calendar_apps?.error) throw calendar_apps.error;
+      const calendar_apps = await supabase
+        .from("calendar_appointments")
+        .insert({
+          date: submitDate,
+          time: res,
+          status: "booked",
+          barber_id: barber,
+          app_id: data[0].id,
+        });
+      if (calendar_apps?.error) throw calendar_apps.error;
+
+      // Add 30mins
+      let totalMinutes = hours * 60 + minutes + 30;
+      hours = Math.floor(totalMinutes / 60) % 24;
+      minutes = totalMinutes % 60;
+    }
+
   } catch (error) {
     return NextResponse.json(
       { message: "Something went Wrong", error: error },

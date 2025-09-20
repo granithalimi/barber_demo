@@ -126,6 +126,17 @@ export const formatDate = (dateString: string) => {
   return `${dayNum} ${month}, ${day}`;
 };
 
+export const add30Minutes = (timeStr:string, times:number) => {
+  let [hours, minutes, seconds] = timeStr.split(":").map(Number);
+
+  for (let i = 0; i < times; i++) {
+    console.log(`${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`);
+    let totalMinutes = hours * 60 + minutes + 30;
+    hours = Math.floor(totalMinutes / 60) % 24;
+    minutes = totalMinutes % 60;
+  }
+}
+
 export const html = (
   name: string,
   date: string,
