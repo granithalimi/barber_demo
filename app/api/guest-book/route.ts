@@ -1,4 +1,5 @@
-import { add30Minutes, static_services } from "@/lib/helpers";
+/* eslint-disable prefer-const */
+import { static_services } from "@/lib/helpers";
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
@@ -26,7 +27,6 @@ export async function POST(request: Request) {
   const supabase = await createClient();
   const single_service = static_services.find((s) => s.id == service);
 
-  add30Minutes(time, 3);
   try {
     const { data, error } = await supabase
       .from("appointments")
