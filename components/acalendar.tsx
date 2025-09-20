@@ -1,6 +1,6 @@
 "use client";
 import { poppins } from "@/fonts/font";
-import { static_times } from "@/lib/helpers";
+import { static_times, static_services } from "@/lib/helpers";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -21,12 +21,15 @@ export default function Acalendar({ name, email }: Props) {
   const [times, setTimes] = useState<Time[] | undefined>();
   const [showMessage, setShowMessage] = useState<string>("");
   const [barbers, setBarbers] = useState<{ name: string; id: number }[]>();
+  const [services, setServices] =
+    useState<{ id: number; name: string; price: string; time: number }[]>();
   const router = useRouter();
 
   // Submiting Data
   const [date, setDate] = useState<Date>(new Date());
   const [time, setTime] = useState<string>("");
   const [barber, setBarber] = useState<string | null>();
+  const [service, setService] = useState<string | null>();
 
   const maxDate = new Date();
   maxDate.setMonth(maxDate.getMonth() + 2);
@@ -36,7 +39,7 @@ export default function Acalendar({ name, email }: Props) {
     const submitDate = date.toLocaleDateString("en-CA");
     const response = await fetch("/api/auth-book", {
       method: "POST",
-      body: JSON.stringify({ name, email, submitDate, barber, time }),
+      body: JSON.stringify({ name, email, submitDate, barber, time, service }),
     });
 
     const data = await response.json();
@@ -66,6 +69,7 @@ export default function Acalendar({ name, email }: Props) {
     const supabase = createClient();
     const fetchingDate = date.toLocaleDateString("en-CA");
     setTimes(static_times);
+    setServices(static_services);
     async function fetchData() {
       const { data } = await supabase
         .from("calendar_appointments")
@@ -108,7 +112,7 @@ export default function Acalendar({ name, email }: Props) {
           <h1 className={`${poppins.className} py-1`}>Select your Barber:</h1>
           <select
             onChange={(e) => setBarber(e.target.value)}
-            className="py-1 px-3 rounded-lg text-gray-400"
+            className="py-1 px-3 rounded-lg text-gray-400 w-32"
           >
             <option>---</option>
             {barbers.map((b, ind) => (
@@ -135,6 +139,26 @@ export default function Acalendar({ name, email }: Props) {
       </div>
       {barber && (
         <>
+          {/* Services */}
+          {services && (
+            <div className="flex items-center gap-3 mb-7 text-base max-w-11/12 md:max-w-2/3">
+              <h1 className={`${poppins.className} py-1`}>
+                Select your Service:
+              </h1>
+              <select
+                onChange={(e) => setService(e.target.value)}
+                className="py-1 px-3 rounded-lg text-gray-400 max-w-32"
+              >
+                <option>---</option>
+                {services.map((s, ind) => (
+                  <option key={ind} value={s.id}>
+                    {s.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           <div>
             <div className="flex items-center gap-1">
               <div className="p-2 bg-transparent border border-white rounded-full"></div>
@@ -206,6 +230,21 @@ export default function Acalendar({ name, email }: Props) {
               </div>
             )}
             <div className="flex flex-col items-center gap-3 my-10">
+              {service && services && (
+                <h1 className={`${poppins.className} font-extrabold text-lg`}>
+                  Cmimi:{" "}
+                  <span className="text-green-500">
+                    {services.find((s) => s.id == parseInt(service))?.price}
+                  </span>
+                  <br />
+                  Kohezgjatja :{" "}
+                  <span className="text-red-500">
+                    {Number(
+                      services.find((s) => s.id == parseInt(service))?.time,
+                    ) * 30}min
+                  </span>
+                </h1>
+              )}
               <button
                 className="bg-red-500 px-3 py-1 rounded-lg font-bold hover:bg-red-400 duration-300"
                 type="submit"

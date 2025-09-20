@@ -85,6 +85,39 @@ export const static_times = [
   },
 ];
 
+export const static_services = [
+  {
+    id: 1,
+    name:"Prerja e Flokeve",
+    price:"300 Den",
+    time: 1,
+  },
+  {
+    id: 2,
+    name:"Rregullimi i Mjekrres",
+    price:"150 Den",
+    time: 1,
+  },
+  {
+    id: 3,
+    name:"Prerja e Flokeve + Mjekkra",
+    price:"350 Den",
+    time: 2,
+  },
+  {
+    id: 4,
+    name:"Larja e Flokeve + Fenerim",
+    price:"200 Den",
+    time: 1,
+  },
+  {
+    id: 5,
+    name:"Prerja e Flokeve te Gjata",
+    price:"400 Den",
+    time: 1,
+  },
+];
+
 export const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   const day = date.toLocaleDateString("sq-Al", { weekday: "long" });

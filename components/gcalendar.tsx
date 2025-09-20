@@ -1,6 +1,6 @@
 "use client";
 import { poppins } from "@/fonts/font";
-import { static_times } from "@/lib/helpers";
+import { static_services, static_times } from "@/lib/helpers";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
@@ -15,6 +15,8 @@ export default function Gcalendar() {
   const [times, setTimes] = useState<Time[] | undefined>();
   const [showMessage, setShowMessage] = useState<string>("");
   const [barbers, setBarbers] = useState<{ name: string; id: number }[]>();
+  const [services, setServices] =
+    useState<{ id: number; name: string; price: string; time: number }[]>();
 
   // Submiting Data
   const [name, setName] = useState("");
@@ -22,6 +24,7 @@ export default function Gcalendar() {
   const [date, setDate] = useState<Date>(new Date());
   const [time, setTime] = useState<string>("");
   const [barber, setBarber] = useState<string | null>();
+  const [service, setService] = useState<string | null>();
 
   const maxDate = new Date();
   maxDate.setMonth(maxDate.getMonth() + 2);
@@ -32,7 +35,7 @@ export default function Gcalendar() {
     const submitDate = date.toLocaleDateString("en-CA");
     const response = await fetch("/api/guest-book", {
       method: "POST",
-      body: JSON.stringify({ name, email, submitDate, time, barber }),
+      body: JSON.stringify({ name, email, submitDate, time, barber, service }),
     });
 
     const data = await response.json();
@@ -54,6 +57,7 @@ export default function Gcalendar() {
     const supabase = createClient();
     const fetchingDate = date.toLocaleDateString("en-CA");
     setTimes(static_times);
+    setServices(static_services);
     async function fetchData() {
       const { data } = await supabase
         .from("calendar_appointments")
@@ -92,11 +96,11 @@ export default function Gcalendar() {
   return (
     <div className="mt-10 flex flex-col items-center text-white">
       {barbers && barbers.length > 0 && (
-        <div className={`flex items-center gap-3 mb-3`}>
+        <div className={`flex items-center gap-3 mb-7`}>
           <h1 className={`${poppins.className} py-1`}>Select your Barber:</h1>
           <select
             onChange={(e) => setBarber(e.target.value)}
-            className="py-1 px-3 rounded-lg text-gray-400"
+            className="py-1 px-3 rounded-lg text-gray-400 w-32"
           >
             <option>---</option>
             {barbers.map((b, ind) => (
@@ -109,7 +113,7 @@ export default function Gcalendar() {
       )}
       <div
         className={`${showMessage !== "" ? "show-message z-20" : "-z-10"} hide-message fixed left-1/2 top-1/2 w-2/3 md:w-auto bg-white rounded-lg flex flex-col items-end gap-3 text-black px-6 py-4 shadow-black/80 shadow-lg`}
-        style={{ transform: "translate(-50%)" }}
+        style={{ transform: "translate(-50%, -50%)" }}
       >
         <div className="flex justify-center w-full">
           <h1 className="text-center">{showMessage}</h1>
@@ -131,6 +135,26 @@ export default function Gcalendar() {
       </div>
       {barber && (
         <>
+          {/* Services */}
+          {services && (
+            <div className="flex items-center gap-3 mb-7 text-base max-w-11/12 md:max-w-2/3">
+              <h1 className={`${poppins.className} py-1`}>
+                Select your Service:
+              </h1>
+              <select
+                onChange={(e) => setService(e.target.value)}
+                className="py-1 px-3 rounded-lg text-gray-400 max-w-32"
+              >
+                <option>---</option>
+                {services.map((s, ind) => (
+                  <option key={ind} value={s.id}>
+                    {s.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           <div>
             <div className="flex items-center gap-1">
               <div className="p-2 bg-transparent border border-white rounded-full"></div>
@@ -157,7 +181,7 @@ export default function Gcalendar() {
                 }
               }}
               tileDisabled={({ date }) => date.getDay() === 0} // 0 = Sunday
-              className="rounded-lg p-3 !bg-transparent mt-5 mb-10"
+              className="rounded-lg p-3 !bg-transparent mt-3 mb-10"
             />
             {times && times.length > 0 && (
               <div className="grid grid-cols-3 gap-3">
@@ -222,6 +246,23 @@ export default function Gcalendar() {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
+
+              {service && services && (
+                <h1 className={`${poppins.className} font-extrabold text-lg`}>
+                  Cmimi:{" "}
+                  <span className="text-green-500">
+                    {services.find((s) => s.id == parseInt(service))?.price}
+                  </span>
+                  <br />
+                  Kohezgjatja :{" "}
+                  <span className="text-red-500">
+                    {Number(
+                      services.find((s) => s.id == parseInt(service))?.time,
+                    ) * 30}
+                    min
+                  </span>
+                </h1>
+              )}
 
               <button
                 className="bg-red-500 px-3 py-1 rounded-lg font-bold hover:bg-red-400 duration-300"

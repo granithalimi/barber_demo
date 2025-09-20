@@ -10,6 +10,7 @@ type Appointment = {
   status: string;
   name: string;
   email: string;
+  service: string;
   profiles: { name: string };
 };
 
@@ -93,6 +94,9 @@ export default function TodaysAppointments({
                 </p>
                 <p>
                   <span className="font-extrabold">Ora:</span> {a.time}
+                </p>
+                <p>
+                  <span className="font-extrabold">Service:</span> {a.service}
                 </p>
                 <p>
                   <span className="font-extrabold">Barber:</span>{" "}

@@ -1,8 +1,9 @@
+import { static_services } from "@/lib/helpers";
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const { name, email, submitDate, time, barber } = await request.json();
+  const { name, email, submitDate, time, barber, service } = await request.json();
 
   if (!name || typeof name !== "string") {
     return NextResponse.json({ error: "Name is Required!" }, { status: 400 });
@@ -14,9 +15,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Time is Required!" }, { status: 400 });
   } else if (!barber) {
     return NextResponse.json({ error: "Barber is Required!" }, { status: 400 });
+  } else if (!service) {
+    return NextResponse.json({ error: "Service is Required!" }, { status: 400 });
   }
 
   const supabase = await createClient();
+  const single_service = static_services.find(s => s.id == service)
+
   try {
     const { data, error } = await supabase
       .from("appointments")
@@ -27,6 +32,7 @@ export async function POST(request: Request) {
         name: name,
         email: email,
         barber_id: barber,
+        service: single_service?.name,
       })
       .select();
     if (error) throw error;
