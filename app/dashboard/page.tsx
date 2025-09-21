@@ -1,6 +1,6 @@
 import Header from "@/components/header/header";
 import { createClient } from "@/lib/supabase/server";
-import { Calendar, Users } from "lucide-react";
+import { Calendar, Scissors, Users } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -37,6 +37,13 @@ export default async function Page() {
         >
           Users
           <Users />
+        </Link>
+        <Link
+          className="px-5 py-2 rounded-lg border border-white flex gap-1 hover:bg-white hover:text-black duration-300"
+          href={"/services"}
+        >
+          <Scissors />
+          Services
         </Link>
       </div>
     </main>
