@@ -24,6 +24,7 @@ export default function Page() {
         .select("role")
         .eq("user_id", auth.data?.user?.id)
         .single();
+
       if (data?.role !== "admin") {
         router.push("/");
       }
