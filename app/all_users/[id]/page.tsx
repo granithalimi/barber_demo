@@ -77,6 +77,19 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     });
   };
 
+  const handleSubmit = async () => {
+    const id = profile?.id
+    const resp = await fetch("/api/make-barber", {
+      method:"POST",
+      body: JSON.stringify({selectedS, id})
+    })
+
+    if(!resp.ok){
+      console.log(resp)
+    }
+    window.location.reload()
+  }
+
   return (
     <main className="bg-gradient-to-tl from-gray-900 to-gray-800 min-h-screen text-white">
       <Header />
@@ -113,7 +126,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                     ))}
                   </div>
                   <div className="flex justify-center my-5">
-                    <button className="bg-blue-500 px-2 font-extrabold py-1 rounded-lg hover:bg-blue-400 duration-300">
+                    <button onClick={() => handleSubmit()} className="bg-blue-500 px-2 font-extrabold py-1 rounded-lg hover:bg-blue-400 duration-300">
                       +Make Barber
                     </button>
                   </div>
