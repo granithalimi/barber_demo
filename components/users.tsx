@@ -1,7 +1,7 @@
 "use client";
 
 import { montserrat } from "@/fonts/font";
-import { createClient } from "@/lib/supabase/client";
+// import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -32,19 +32,19 @@ export default function Users({ users }: { users: User[] }) {
   //   }
   // };
 
-  const handleMakeClientClick = async (id: string) => {
-    const supabase = createClient();
-    const { error } = await supabase
-      .from("profiles")
-      .update({ role: "client" })
-      .eq("user_id", id);
-
-    if (error) {
-      console.log(error)
-    } else {
-      window.location.reload();
-    }
-  };
+  // const handleMakeClientClick = async (id: string) => {
+  //   const supabase = createClient();
+  //   const { error } = await supabase
+  //     .from("profiles")
+  //     .update({ role: "client" })
+  //     .eq("user_id", id);
+  //
+  //   if (error) {
+  //     console.log(error)
+  //   } else {
+  //     window.location.reload();
+  //   }
+  // };
 
   const handleUserDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this user?")) return;
@@ -86,22 +86,13 @@ export default function Users({ users }: { users: User[] }) {
                   >
                     Delete
                   </button>
-                  {u.role == "client" ? (
-                    <Link
-                      href={`/all_users/${u.user_id}`}
-                      // onClick={() => handleMakeBarberClick(u.user_id)}
-                      className="bg-blue-500 px-2 py-1 rounded-lg hover:bg-blue-400 duration-300"
-                    >
-                      +Barber
-                    </Link>
-                  ) : (
-                    <button
-                      onClick={() => handleMakeClientClick(u.user_id)}
-                      className="bg-gray-500 px-2 py-1 rounded-lg hover:bg-gray-400 duration-300"
-                    >
-                      -Client
-                    </button>
-                  )}
+                  <Link
+                    href={`/all_users/${u.user_id}`}
+                    // onClick={() => handleMakeBarberClick(u.user_id)}
+                    className="bg-blue-500 px-2 py-1 rounded-lg hover:bg-blue-400 duration-300"
+                  >
+                    Edit
+                  </Link>
                   <h1 className="uppercase">{u.role}</h1>
                 </div>
               </div>
