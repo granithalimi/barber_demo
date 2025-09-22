@@ -1,6 +1,6 @@
 "use client";
 import { poppins } from "@/fonts/font";
-import { static_times, static_services } from "@/lib/helpers";
+import { static_times } from "@/lib/helpers";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -22,7 +22,7 @@ export default function Acalendar({ name, email }: Props) {
   const [showMessage, setShowMessage] = useState<string>("");
   const [barbers, setBarbers] = useState<{ name: string; id: number }[]>();
   const [services, setServices] =
-    useState<{ id: number; name: string; price: string; time: number }[]>();
+    useState<{ id: number; name: string; price: string; time: number }[] | null>();
   const router = useRouter();
 
   // Submiting Data
@@ -69,7 +69,7 @@ export default function Acalendar({ name, email }: Props) {
     const supabase = createClient();
     const fetchingDate = date.toLocaleDateString("en-CA");
     setTimes(static_times);
-    setServices(static_services);
+    // setServices(static_services);
     async function fetchData() {
       const { data } = await supabase
         .from("calendar_appointments")
@@ -100,9 +100,20 @@ export default function Acalendar({ name, email }: Props) {
       }
     }
 
+    async function fetchServices() {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from("services")
+        .select("id, name, price, time")
+        .order("id", { ascending: true });
+
+      setServices(data)
+    }
+
     setTime("");
     fetchBarbers();
     fetchData();
+    fetchServices();
   }, [date, barber]);
 
   return (

@@ -2,6 +2,7 @@
 
 import { montserrat } from "@/fonts/font";
 import { createClient } from "@/lib/supabase/client";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 type User = {
@@ -16,20 +17,20 @@ export default function Users({ users }: { users: User[] }) {
     setAllUsers(users);
   }, [users]);
 
-  const handleMakeBarberClick = async (id: string) => {
-    const supabase = createClient();
-    const { error } = await supabase
-      .from("profiles")
-      .update({ role: "barber" })
-      .eq("user_id", id);
-
-
-    if (error) {
-      console.log(error)
-    } else {
-      window.location.reload();
-    }
-  };
+  // const handleMakeBarberClick = async (id: string) => {
+  //   const supabase = createClient();
+  //   const { error } = await supabase
+  //     .from("profiles")
+  //     .update({ role: "barber" })
+  //     .eq("user_id", id);
+  //
+  //
+  //   if (error) {
+  //     console.log(error)
+  //   } else {
+  //     window.location.reload();
+  //   }
+  // };
 
   const handleMakeClientClick = async (id: string) => {
     const supabase = createClient();
@@ -86,12 +87,13 @@ export default function Users({ users }: { users: User[] }) {
                     Delete
                   </button>
                   {u.role == "client" ? (
-                    <button
-                      onClick={() => handleMakeBarberClick(u.user_id)}
+                    <Link
+                      href={`/all_users/${u.user_id}`}
+                      // onClick={() => handleMakeBarberClick(u.user_id)}
                       className="bg-blue-500 px-2 py-1 rounded-lg hover:bg-blue-400 duration-300"
                     >
                       +Barber
-                    </button>
+                    </Link>
                   ) : (
                     <button
                       onClick={() => handleMakeClientClick(u.user_id)}

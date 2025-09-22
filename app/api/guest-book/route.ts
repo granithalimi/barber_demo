@@ -1,5 +1,4 @@
 /* eslint-disable prefer-const */
-import { static_services } from "@/lib/helpers";
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
@@ -25,7 +24,7 @@ export async function POST(request: Request) {
   }
 
   const supabase = await createClient();
-  const single_service = static_services.find((s) => s.id == service);
+  const single_service = await supabase.from("services").select("name, time").eq("id", service).single()
 
   try {
     const { data, error } = await supabase
@@ -37,14 +36,14 @@ export async function POST(request: Request) {
         name: name,
         email: email,
         barber_id: barber,
-        service: single_service?.name,
+        service: single_service.data?.name,
       })
       .select();
     if (error) throw error;
 
     // Calendar Apps
     let [hours, minutes, seconds] = time.split(":").map(Number);
-    for (let i = 0; i < Number(single_service?.time); i++) {
+    for (let i = 0; i < Number(single_service.data?.time); i++) {
       const res = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
 
       const calendar_apps = await supabase
