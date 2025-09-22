@@ -11,12 +11,22 @@ type Time = {
   status: string;
 };
 
+type Service = {
+  id: number;
+  name: string;
+  price: number;
+  time: string;
+};
+
+type ProfileService = {
+  services: Service;
+};
+
 export default function Gcalendar() {
   const [times, setTimes] = useState<Time[] | undefined>();
   const [showMessage, setShowMessage] = useState<string>("");
   const [barbers, setBarbers] = useState<{ name: string; id: number }[]>();
-  const [services, setServices] =
-    useState<{ id: number; name: string; price: string; time: number }[] | null>();
+  const [services, setServices] = useState<ProfileService[] | null>(null);
 
   // Submiting Data
   const [name, setName] = useState("");
@@ -90,12 +100,12 @@ export default function Gcalendar() {
 
     async function fetchServices() {
       const supabase = createClient();
-      const { data } = await supabase
-        .from("services")
-        .select("id, name, price, time")
-        .order("id", { ascending: true });
+      const services = await supabase
+        .from("profiles_services")
+        .select(`services(id,name,price,time)`)
+        .eq("profile_id", barber);
 
-      setServices(data)
+      setServices(services?.data as ProfileService[] | null);
     }
 
     setTime("");
@@ -158,8 +168,8 @@ export default function Gcalendar() {
               >
                 <option>---</option>
                 {services.map((s, ind) => (
-                  <option key={ind} value={s.id}>
-                    {s.name}
+                  <option key={ind} value={s.services.id}>
+                    {s.services.name}
                   </option>
                 ))}
               </select>
@@ -262,14 +272,19 @@ export default function Gcalendar() {
                 <h1 className={`${poppins.className} font-extrabold text-lg`}>
                   Cmimi:{" "}
                   <span className="text-green-500">
-                    {services.find((s) => s.id == parseInt(service))?.price}
+                    {
+                      services.find((s) => s.services.id == parseInt(service))
+                        ?.services?.price
+                    }{" "}
+                    Den
                   </span>
                   <br />
                   Kohezgjatja :{" "}
                   <span className="text-red-500">
                     {Number(
-                      services.find((s) => s.id == parseInt(service))?.time,
-                    ) * 30}
+                      services.find((s) => s.services.id == parseInt(service))
+                        ?.services?.time,
+                    ) * 30}{" "}
                     min
                   </span>
                 </h1>
