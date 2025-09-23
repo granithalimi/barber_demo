@@ -61,10 +61,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     getServices();
   }, [router, params]);
 
-  useEffect(() => {
-    console.log(profile);
-  }, [profile]);
-
   const handleServiceClick = (id: number) => {
     setSelectedS((prev) => {
       const exists = prev?.find((s) => s.service_id === id);
@@ -78,17 +74,39 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   };
 
   const handleSubmit = async () => {
-    const id = profile?.id
+    const id = profile?.id;
     const resp = await fetch("/api/make-barber", {
-      method:"POST",
-      body: JSON.stringify({selectedS, id})
-    })
+      method: "POST",
+      body: JSON.stringify({ selectedS, id }),
+    });
 
-    if(!resp.ok){
-      console.log(resp)
+    if (!resp.ok) {
+      console.log(resp);
     }
-    window.location.reload()
-  }
+    window.location.reload();
+  };
+
+  const handleMakeClient = async () => {
+    const supabase = createClient();
+    const { error } = await supabase
+      .from("profiles")
+      .update({ role: "client" })
+      .eq("id", profile?.id);
+
+    if (error) {
+      console.log(error);
+    }
+
+    const profiles_services = await supabase
+      .from("profiles_services")
+      .delete()
+      .eq("profile_id", profile?.id);
+
+    if (profiles_services.error) {
+      console.log(error);
+    }
+    window.location.reload();
+  };
 
   return (
     <main className="bg-gradient-to-tl from-gray-900 to-gray-800 min-h-screen text-white">
@@ -126,7 +144,10 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                     ))}
                   </div>
                   <div className="flex justify-center my-5">
-                    <button onClick={() => handleSubmit()} className="bg-blue-500 px-2 font-extrabold py-1 rounded-lg hover:bg-blue-400 duration-300">
+                    <button
+                      onClick={() => handleSubmit()}
+                      className="bg-blue-500 px-2 font-extrabold py-1 rounded-lg hover:bg-blue-400 duration-300"
+                    >
                       +Make Barber
                     </button>
                   </div>
@@ -136,7 +157,15 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
               )}
             </>
           ) : (
-            <h1 className="text-center">I am a Barber</h1>
+            <div className="flex flex-col items-center">
+              <h1 className="text-center">I am a Barber</h1>
+              <button
+                className="mt-4 px-3 py-1 rounded-lg font-bold bg-blue-500 hover:bg-blue-400 duration-300"
+                onClick={() => handleMakeClient()}
+              >
+                Make Client
+              </button>
+            </div>
           )}
         </div>
       )}
