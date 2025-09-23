@@ -6,16 +6,21 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+type Profile = {
+  id: number;
+  user_id: string;
+  role: string;
+  name: string;
+};
+
+type Services = {
+  id: number;
+  name: string;
+};
+
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
-  const [profile, setProfile] = useState<{
-    id: number;
-    user_id: string;
-    role: string;
-    name: string;
-  } | null>();
-  const [services, setServices] = useState<
-    { id: number; name: string }[] | null
-  >();
+  const [profile, setProfile] = useState<Profile | null>();
+  const [services, setServices] = useState<Services[] | null>();
   const router = useRouter();
 
   //Submiting states
@@ -32,6 +37,21 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         .single();
 
       setProfile(data);
+
+      const all_services = await supabase
+        .from("services")
+        .select("id, name")
+        .order("id", { ascending: true });
+
+      setServices(all_services?.data);
+      if (data?.role == "barber") {
+        const oldServices = await supabase
+          .from("profiles_services")
+          .select("service_id")
+          .eq("profile_id", data?.id);
+
+        setSelectedS(oldServices?.data);
+      }
     }
 
     async function getRole() {
@@ -47,18 +67,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       }
     }
 
-    async function getServices() {
-      const { data } = await supabase
-        .from("services")
-        .select("id, name")
-        .order("id", { ascending: true });
-
-      setServices(data);
-    }
-
     getRole();
     getData();
-    getServices();
   }, [router, params]);
 
   const handleServiceClick = (id: number) => {
@@ -124,11 +134,10 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           </h1>
           {profile?.role == "client" ? (
             <>
-              <h1 className="text-center">I am a Client</h1>
               {services && services.length > 0 ? (
                 <>
                   <h1
-                    className={`${poppins.className} text-xl text-center mt-10 mb-3`}
+                    className={`${poppins.className} text-xl text-center mt-6 mb-3`}
                   >
                     Select Services
                   </h1>
@@ -153,18 +162,50 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                   </div>
                 </>
               ) : (
-                <h1>No services yet</h1>
+                <h1 className="text-center font-extrabold">No services yet!</h1>
               )}
             </>
           ) : (
             <div className="flex flex-col items-center">
-              <h1 className="text-center">I am a Barber</h1>
-              <button
-                className="mt-4 px-3 py-1 rounded-lg font-bold bg-blue-500 hover:bg-blue-400 duration-300"
-                onClick={() => handleMakeClient()}
-              >
-                Make Client
-              </button>
+              {services && services.length > 0 ? (
+                <>
+                  <h1
+                    className={`${poppins.className} text-xl text-center mt-10 mb-3`}
+                  >
+                    Select Services
+                  </h1>
+                  <div className="mx-auto w-11/12 md:w-2/3 grid grid-cols-3 gap-3 ">
+                    {services.map((s, ind) => (
+                      <button
+                        className={`${selectedS?.find((S) => S.service_id === s.id) ? "bg-white text-black font-bold" : ""} border border-white rounded-lg py-1 hover:bg-white hover:text-black hover:scale-105 duration-300`}
+                        key={ind}
+                        onClick={() => handleServiceClick(s.id)}
+                      >
+                        {s.name}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <h1 className="text-center font-extrabold">No services yet!</h1>
+              )}
+              <div className="flex justify-center gap-3">
+                <button
+                  className="px-3 py-1 rounded-lg font-bold bg-blue-500 hover:bg-blue-400 duration-300"
+                  onClick={() => handleMakeClient()}
+                >
+                  Make Client
+                </button>
+
+                {services && (
+                  <button
+                    onClick={() => handleSubmit()}
+                    className="bg-green-500 px-2 font-extrabold py-1 rounded-lg hover:bg-green-400 duration-300"
+                  >
+                    +Update Barber
+                  </button>
+                )}
+              </div>
             </div>
           )}
         </div>
