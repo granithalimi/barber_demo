@@ -23,6 +23,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ status: 400, message: "User Id is required!" });
   }
 
+  const prev_services = await supabase
+    .from("profiles_services")
+    .delete()
+    .eq("profile_id", id);
+  if (prev_services.error) console.log(prev_services.error);
+
   for (let i = 0; i < selectedS.length; i++) {
     const profile_service = await supabase.from("profiles_services").insert({
       service_id: selectedS[i].service_id,
