@@ -132,82 +132,45 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           >
             {profile.role}
           </h1>
-          {profile?.role == "client" ? (
+          {services && services.length > 0 ? (
             <>
-              {services && services.length > 0 ? (
-                <>
-                  <h1
-                    className={`${poppins.className} text-xl text-center mt-6 mb-3`}
+              <h1
+                className={`${poppins.className} text-xl text-center mt-6 mb-3`}
+              >
+                Select Services
+              </h1>
+              <div className="mx-auto w-11/12 md:w-2/3 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 ">
+                {services.map((s, ind) => (
+                  <button
+                    className={`${selectedS?.find((S) => S.service_id === s.id) ? "bg-white text-black font-bold" : ""} border border-white rounded-lg py-1 hover:bg-white hover:text-black hover:scale-105 duration-300`}
+                    key={ind}
+                    onClick={() => handleServiceClick(s.id)}
                   >
-                    Select Services
-                  </h1>
-                  <div className="mx-auto w-11/12 md:w-2/3 grid grid-cols-3 gap-3 ">
-                    {services.map((s, ind) => (
-                      <button
-                        className={`${selectedS?.find((S) => S.service_id === s.id) ? "bg-white text-black font-bold" : ""} border border-white rounded-lg py-1 hover:bg-white hover:text-black hover:scale-105 duration-300`}
-                        key={ind}
-                        onClick={() => handleServiceClick(s.id)}
-                      >
-                        {s.name}
-                      </button>
-                    ))}
-                  </div>
-                  <div className="flex justify-center my-5">
-                    <button
-                      onClick={() => handleSubmit()}
-                      className="bg-blue-500 px-2 font-extrabold py-1 rounded-lg hover:bg-blue-400 duration-300"
-                    >
-                      +Make Barber
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <h1 className="text-center font-extrabold">No services yet!</h1>
-              )}
+                    {s.name}
+                  </button>
+                ))}
+              </div>
             </>
           ) : (
-            <div className="flex flex-col items-center">
-              {services && services.length > 0 ? (
-                <>
-                  <h1
-                    className={`${poppins.className} text-xl text-center mt-10 mb-3`}
-                  >
-                    Select Services
-                  </h1>
-                  <div className="mx-auto w-11/12 md:w-2/3 grid grid-cols-3 gap-3 ">
-                    {services.map((s, ind) => (
-                      <button
-                        className={`${selectedS?.find((S) => S.service_id === s.id) ? "bg-white text-black font-bold" : ""} border border-white rounded-lg py-1 hover:bg-white hover:text-black hover:scale-105 duration-300`}
-                        key={ind}
-                        onClick={() => handleServiceClick(s.id)}
-                      >
-                        {s.name}
-                      </button>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <h1 className="text-center font-extrabold">No services yet!</h1>
-              )}
-              <div className="flex justify-center gap-3">
-                <button
-                  className="px-3 py-1 rounded-lg font-bold bg-blue-500 hover:bg-blue-400 duration-300"
-                  onClick={() => handleMakeClient()}
-                >
-                  Make Client
-                </button>
-
-                {services && (
-                  <button
-                    onClick={() => handleSubmit()}
-                    className="bg-green-500 px-2 font-extrabold py-1 rounded-lg hover:bg-green-400 duration-300"
-                  >
-                    +Update Barber
-                  </button>
-                )}
-              </div>
-            </div>
+            <h1 className="text-center font-extrabold">No services yet!</h1>
           )}
+          <div className="flex justify-center gap-3 mt-5">
+            {profile?.role == "barber" && (
+              <button
+                className="px-3 py-1 rounded-lg font-bold bg-blue-500 hover:bg-blue-400 duration-300"
+                onClick={() => handleMakeClient()}
+              >
+                Make Client
+              </button>
+            )}
+
+            <button
+              onClick={() => handleSubmit()}
+              className={`${profile?.role == "barber" ? "bg-green-500 hover:bg-green-400" : "bg-blue-500 hover:bg-blue-400"} px-2 font-extrabold py-1 rounded-lg duration-300`}
+            >
+              {profile?.role == "barber" ? "+Update Barber" : "+Make Barber"}
+            </button>
+          </div>
         </div>
       )}
     </main>
