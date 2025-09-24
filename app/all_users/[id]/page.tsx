@@ -18,15 +18,31 @@ type Services = {
   name: string;
 };
 
+type WeekDays = {
+  week_day: number;
+  start: string | "";
+  end: string | "";
+};
+
+const defaultWH = [
+  { week_day: 1, start: "", end: "" },
+  { week_day: 2, start: "", end: "" },
+  { week_day: 3, start: "", end: "" },
+  { week_day: 4, start: "", end: "" },
+  { week_day: 5, start: "", end: "" },
+  { week_day: 6, start: "", end: "" },
+];
+
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [profile, setProfile] = useState<Profile | null>();
   const [services, setServices] = useState<Services[] | null>();
-  const [daysOfTheWeek, setDaysOfTheWeek] = useState<string[] | null>();
+  const [weekDays, setWeekDays] = useState<string[] | null>();
 
   const router = useRouter();
 
   //Submiting states
   const [selectedS, setSelectedS] = useState<{ service_id: number }[] | null>();
+  const [selectedW, setSelectedW] = useState<WeekDays[] | null>(defaultWH);
 
   useEffect(() => {
     const supabase = createClient();
@@ -52,7 +68,13 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           .select("service_id")
           .eq("profile_id", data?.id);
 
+        const oldWorkHours = await supabase
+          .from("working_hours")
+          .select("week_day, start, end")
+          .eq("barber_id", data?.id);
+
         setSelectedS(oldServices?.data);
+        setSelectedW(oldWorkHours?.data);
       }
     }
 
@@ -71,7 +93,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
     getRole();
     getData();
-    setDaysOfTheWeek([
+    setWeekDays([
       "Monday",
       "Tuesday",
       "Wednesday",
@@ -93,11 +115,23 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     });
   };
 
+  const handleTimeChange = (id: number, time: string, type: string) => {
+    setSelectedW((prev) => {
+      if (!prev) return prev;
+
+      if (type == "start") {
+        return prev.map((w, i) => (i === id ? { ...w, start: time } : w));
+      }else{
+        return prev.map((w, i) => (i === id ? { ...w, end: time } : w));
+      }
+    });
+  };
+
   const handleSubmit = async () => {
     const id = profile?.id;
     const resp = await fetch("/api/make-barber", {
       method: "POST",
-      body: JSON.stringify({ selectedS, id }),
+      body: JSON.stringify({ selectedS, selectedW, id }),
     });
 
     if (!resp.ok) {
@@ -169,30 +203,46 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
           {/* Working Hours */}
           <div className="mx-auto my-10 w-11/12 md:w-2/3 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-            {daysOfTheWeek &&
-              daysOfTheWeek.length > 0 &&
-              daysOfTheWeek.map((d, ind) => (
+            {weekDays &&
+              weekDays.length > 0 &&
+              weekDays.map((d, ind) => (
                 <div className="flex flex-col" key={ind}>
                   <h1 className={`${montserrat.className} text-xl text-center`}>
                     {d}
                   </h1>
                   <div className="mt-2 mb-1">
                     <label>Starting Time:</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="09:00:00"
-                      className="py-1 px-2 rounded-lg bg-transparent border border-white w-full"
-                    />
+                    {selectedW && (
+                      <input
+                        type="text"
+                        required
+                        placeholder="09:00:00"
+                        className="py-1 px-2 rounded-lg bg-transparent border border-white w-full"
+                        onChange={(e) =>
+                          handleTimeChange(ind, e.target.value, "start")
+                        }
+                        value={
+                          selectedW.find((w) => w.week_day == ind + 1)?.start
+                        }
+                      />
+                    )}
                   </div>
                   <div>
                     <label>Finish Time:</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="18:00:00"
-                      className="py-1 px-2 rounded-lg bg-transparent border border-white w-full"
-                    />
+                    {selectedW && (
+                      <input
+                        type="text"
+                        required
+                        placeholder="18:00:00"
+                        className="py-1 px-2 rounded-lg bg-transparent border border-white w-full"
+                        onChange={(e) =>
+                          handleTimeChange(ind, e.target.value, "end")
+                        }
+                        value={
+                          selectedW.find((w) => w.week_day == ind + 1)?.end
+                        }
+                      />
+                    )}
                   </div>
                 </div>
               ))}
