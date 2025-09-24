@@ -21,6 +21,8 @@ type Services = {
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [profile, setProfile] = useState<Profile | null>();
   const [services, setServices] = useState<Services[] | null>();
+  const [daysOfTheWeek, setDaysOfTheWeek] = useState<string[] | null>();
+
   const router = useRouter();
 
   //Submiting states
@@ -69,6 +71,14 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
     getRole();
     getData();
+    setDaysOfTheWeek([
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ]);
   }, [router, params]);
 
   const handleServiceClick = (id: number) => {
@@ -132,6 +142,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           >
             {profile.role}
           </h1>
+
+          {/* Services */}
           {services && services.length > 0 ? (
             <>
               <h1
@@ -154,7 +166,38 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           ) : (
             <h1 className="text-center font-extrabold">No services yet!</h1>
           )}
-          <div className="flex justify-center gap-3 mt-5">
+
+          {/* Working Hours */}
+          <div className="mx-auto my-10 w-11/12 md:w-2/3 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            {daysOfTheWeek &&
+              daysOfTheWeek.length > 0 &&
+              daysOfTheWeek.map((d, ind) => (
+                <div className="flex flex-col" key={ind}>
+                  <h1 className={`${montserrat.className} text-xl text-center`}>
+                    {d}
+                  </h1>
+                  <div className="mt-2 mb-1">
+                    <label>Starting Time:</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="09:00:00"
+                      className="py-1 px-2 rounded-lg bg-transparent border border-white w-full"
+                    />
+                  </div>
+                  <div>
+                    <label>Finish Time:</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="18:00:00"
+                      className="py-1 px-2 rounded-lg bg-transparent border border-white w-full"
+                    />
+                  </div>
+                </div>
+              ))}
+          </div>
+          <div className="flex justify-center gap-3 mt-5 pb-28">
             {profile?.role == "barber" && (
               <button
                 className="px-3 py-1 rounded-lg font-bold bg-blue-500 hover:bg-blue-400 duration-300"
@@ -166,7 +209,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
             <button
               onClick={() => handleSubmit()}
-              className={`${profile?.role == "barber" ? "bg-green-500 hover:bg-green-400" : "bg-blue-500 hover:bg-blue-400"} px-2 font-extrabold py-1 rounded-lg duration-300`}
+              className={`${profile?.role == "barber" ? "bg-green-500 hover:bg-green-400" : "bg-blue-500 hover:bg-blue-400"} px-2 py-1 font-extrabold rounded-lg duration-300`}
             >
               {profile?.role == "barber" ? "+Update Barber" : "+Make Barber"}
             </button>
