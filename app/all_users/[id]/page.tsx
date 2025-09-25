@@ -159,6 +159,16 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     if (profiles_services.error) {
       console.log(error);
     }
+
+    const working_hours = await supabase
+      .from("working_hours")
+      .delete()
+      .eq("barber_id", profile?.id);
+
+    if (working_hours.error) {
+      console.log(error);
+    }
+
     window.location.reload();
   };
 

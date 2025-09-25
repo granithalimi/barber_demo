@@ -9,8 +9,6 @@ export async function POST(request: Request) {
       status: 400,
       message: "Services are required!",
     });
-  // }else if(!selectedW){
-  //   return NextResponse.json({ status: 400, message: "Working Hours are required!" });
   } else if (!id) {
     return NextResponse.json({ status: 400, message: "User Id is required!" });
   }
@@ -52,8 +50,8 @@ export async function POST(request: Request) {
   for (let i = 0; i < 6; i++) {
     const working_hours = await supabase.from("working_hours").insert({
       week_day: selectedW[i].week_day,
-      start: selectedW[i].start,
-      end: selectedW[i].end,
+      start: selectedW[i].start == "" ? null : selectedW[i].start,
+      end: selectedW[i].end == "" ? null : selectedW[i].end,
       barber_id: id,
     });
 
