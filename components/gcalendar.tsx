@@ -1,4 +1,3 @@
-/* eslint-disable prefer-const */
 "use client";
 import { poppins } from "@/fonts/font";
 import { timeToMinutes, minutesToTime } from "@/lib/helpers";
