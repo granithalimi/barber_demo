@@ -40,7 +40,6 @@ export async function POST(request: Request) {
     }
   }
 
-  console.log(selectedW)
   const prev_working_hours= await supabase
     .from("working_hours")
     .delete()

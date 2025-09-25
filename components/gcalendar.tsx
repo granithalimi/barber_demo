@@ -1,6 +1,7 @@
+/* eslint-disable prefer-const */
 "use client";
 import { poppins } from "@/fonts/font";
-import { static_times } from "@/lib/helpers";
+import { timeToMinutes, minutesToTime } from "@/lib/helpers";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
@@ -23,7 +24,7 @@ type ProfileService = {
 };
 
 export default function Gcalendar() {
-  const [times, setTimes] = useState<Time[] | undefined>();
+  const [times, setTimes] = useState<Time[] | null>();
   const [showMessage, setShowMessage] = useState<string>("");
   const [barbers, setBarbers] = useState<{ name: string; id: number }[]>();
   const [services, setServices] = useState<ProfileService[] | null>(null);
@@ -66,25 +67,53 @@ export default function Gcalendar() {
   useEffect(() => {
     const supabase = createClient();
     const fetchingDate = date.toLocaleDateString("en-CA");
-    setTimes(static_times);
 
     async function fetchData() {
+      const working_hours = await supabase
+        .from("working_hours")
+        .select("start, end")
+        .eq("week_day", date.getDay())
+        .eq("barber_id", barber)
+        .order("id", { ascending: true })
+        .single();
+
       const { data } = await supabase
         .from("calendar_appointments")
         .select("time, status")
         .eq("date", fetchingDate)
         .eq("barber_id", barber);
-      if (data) {
-        for (let i = 0; i < data.length; i++) {
-          setTimes((prev) =>
-            (prev ?? []).map((obj) =>
-              obj.time === data[i].time
-                ? { ...obj, status: data[i].status }
-                : obj,
-            ),
-          );
+
+      setTimes(() => {
+        const curr_time: string | undefined = working_hours?.data?.start;
+        const end_time: string | undefined = working_hours?.data?.end;
+
+        if (!curr_time || !end_time) {
+          return
         }
-      }
+        const timeSlots: Time[] = [];
+        const startMinutes: number = timeToMinutes(curr_time);
+        const endMinutes: number = timeToMinutes(end_time);
+
+        for (let time = startMinutes; time < endMinutes; time += 30) {
+          const checking_time = minutesToTime(time);
+
+          // check if it exists in db, if so import the status if not import default
+          const exists = data?.find((d) => d.time == checking_time) || null;
+          if (exists) {
+            timeSlots.push({
+              status: exists.status,
+              time: exists.time,
+            });
+          } else {
+            timeSlots.push({
+              status: "pending",
+              time: minutesToTime(time),
+            });
+          }
+        }
+
+        return timeSlots;
+      });
     }
 
     async function fetchBarbers() {

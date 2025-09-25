@@ -121,7 +121,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
       if (type == "start") {
         return prev.map((w, i) => (i === id ? { ...w, start: time } : w));
-      }else{
+      } else {
         return prev.map((w, i) => (i === id ? { ...w, end: time } : w));
       }
     });
@@ -222,37 +222,37 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                   </h1>
                   <div className="mt-2 mb-1">
                     <label>Starting Time:</label>
-                    {selectedW && (
-                      <input
-                        type="text"
-                        required
-                        placeholder="09:00:00"
-                        className="py-1 px-2 rounded-lg bg-transparent border border-white w-full"
-                        onChange={(e) =>
-                          handleTimeChange(ind, e.target.value, "start")
-                        }
-                        value={
-                          selectedW.find((w) => w.week_day == ind + 1)?.start
-                        }
-                      />
-                    )}
+                    <input
+                      type="text"
+                      required
+                      placeholder="09:00:00"
+                      className="py-1 px-2 rounded-lg bg-transparent border border-white w-full"
+                      onChange={(e) =>
+                        handleTimeChange(ind, e.target.value, "start")
+                      }
+                      value={
+                        selectedW
+                          ? selectedW.find((w) => w.week_day == ind + 1)?.start
+                          : ""
+                      }
+                    />
                   </div>
                   <div>
                     <label>Finish Time:</label>
-                    {selectedW && (
-                      <input
-                        type="text"
-                        required
-                        placeholder="18:00:00"
-                        className="py-1 px-2 rounded-lg bg-transparent border border-white w-full"
-                        onChange={(e) =>
-                          handleTimeChange(ind, e.target.value, "end")
-                        }
-                        value={
-                          selectedW.find((w) => w.week_day == ind + 1)?.end
-                        }
-                      />
-                    )}
+                    <input
+                      type="text"
+                      required
+                      placeholder="18:00:00"
+                      className="py-1 px-2 rounded-lg bg-transparent border border-white w-full"
+                      onChange={(e) =>
+                        handleTimeChange(ind, e.target.value, "end")
+                      }
+                      value={
+                        selectedW
+                          ? selectedW.find((w) => w.week_day == ind + 1)?.end
+                          : ""
+                      }
+                    />
                   </div>
                 </div>
               ))}

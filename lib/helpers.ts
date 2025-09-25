@@ -88,32 +88,32 @@ export const static_times = [
 export const static_services = [
   {
     id: 1,
-    name:"Prerja e Flokeve",
-    price:"300 Den",
+    name: "Prerja e Flokeve",
+    price: "300 Den",
     time: 1,
   },
   {
     id: 2,
-    name:"Rregullimi i Mjekrres",
-    price:"150 Den",
+    name: "Rregullimi i Mjekrres",
+    price: "150 Den",
     time: 1,
   },
   {
     id: 3,
-    name:"Prerja e Flokeve + Mjekkra",
-    price:"350 Den",
+    name: "Prerja e Flokeve + Mjekkra",
+    price: "350 Den",
     time: 2,
   },
   {
     id: 4,
-    name:"Larja e Flokeve + Fenerim",
-    price:"200 Den",
+    name: "Larja e Flokeve + Fenerim",
+    price: "200 Den",
     time: 1,
   },
   {
     id: 5,
-    name:"Prerja e Flokeve te Gjata",
-    price:"400 Den",
+    name: "Prerja e Flokeve te Gjata",
+    price: "400 Den",
     time: 1,
   },
 ];
@@ -126,11 +126,18 @@ export const formatDate = (dateString: string) => {
   return `${dayNum} ${month}, ${day}`;
 };
 
-export const html = (
-  name: string,
-  date: string,
-  time: string,
-) => {
+export const timeToMinutes = (timeStr: string): number => {
+  const [hours, minutes, seconds] = timeStr.split(":").map(Number);
+  return hours * 60 + minutes;
+};
+
+export const minutesToTime = (totalMinutes: number): string => {
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:00`;
+};
+
+export const html = (name: string, date: string, time: string) => {
   return `
 <body style="margin:0;padding:0;background:#f5f5f5;color:#111;">
     <!-- Wrapper -->
