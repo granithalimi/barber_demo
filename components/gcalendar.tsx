@@ -35,6 +35,7 @@ export default function Gcalendar() {
   const [time, setTime] = useState<string>("");
   const [barber, setBarber] = useState<string | null>();
   const [service, setService] = useState<string | null>();
+  const [lastTime, setLastTime] = useState<string | null>();
 
   const maxDate = new Date();
   maxDate.setMonth(maxDate.getMonth() + 2);
@@ -45,7 +46,7 @@ export default function Gcalendar() {
     const submitDate = date.toLocaleDateString("en-CA");
     const response = await fetch("/api/guest-book", {
       method: "POST",
-      body: JSON.stringify({ name, email, submitDate, time, barber, service }),
+      body: JSON.stringify({ name, email, submitDate, time, barber, service, lastTime }),
     });
 
     const data = await response.json();
@@ -113,6 +114,9 @@ export default function Gcalendar() {
 
         return timeSlots;
       });
+      if(times && times.length > 0){
+        setLastTime(times[times.length - 1]?.time)
+      }
     }
 
     async function fetchBarbers() {
