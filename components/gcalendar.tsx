@@ -46,7 +46,15 @@ export default function Gcalendar() {
     const submitDate = date.toLocaleDateString("en-CA");
     const response = await fetch("/api/guest-book", {
       method: "POST",
-      body: JSON.stringify({ name, email, submitDate, time, barber, service, lastTime }),
+      body: JSON.stringify({
+        name,
+        email,
+        submitDate,
+        time,
+        barber,
+        service,
+        lastTime,
+      }),
     });
 
     const data = await response.json();
@@ -88,7 +96,7 @@ export default function Gcalendar() {
         const end_time: string | undefined = working_hours?.data?.end;
 
         if (!curr_time || !end_time) {
-          return
+          return;
         }
         const timeSlots: Time[] = [];
         const startMinutes: number = timeToMinutes(curr_time);
@@ -114,9 +122,6 @@ export default function Gcalendar() {
 
         return timeSlots;
       });
-      if(times && times.length > 0){
-        setLastTime(times[times.length - 1]?.time)
-      }
     }
 
     async function fetchBarbers() {
@@ -145,6 +150,15 @@ export default function Gcalendar() {
     fetchData();
     fetchServices();
   }, [date, barber]);
+
+  // Only when times change set Last Time
+  useEffect(() => {
+    if (times && times.length > 0) {
+      setLastTime(times[times.length - 1]?.time);
+    }else{
+      setLastTime(undefined);
+    }
+  }, [times]);
 
   return (
     <div className="mt-10 flex flex-col items-center text-white">

@@ -22,7 +22,6 @@ export async function POST(request: Request) {
       { status: 400 },
     );
   }
-  console.log(lastTime)
 
   const supabase = await createClient();
   const single_service = await supabase.from("services").select("name, time").eq("id", service).single()
@@ -33,9 +32,9 @@ export async function POST(request: Request) {
     for (let i = 0; i < Number(single_service.data?.time); i++) {
       const res = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
 
-      // if (res > lastTime) {
-      //   return NextResponse.json({ status: 400, message: `The latest available appointment with your barber is at ${lastTime}. Please select a different time.` });
-      // }
+      if (res > lastTime) {
+        return NextResponse.json({ status: 400, message: `The latest available appointment with your barber is at ${lastTime}. Please select a different time.` });
+      }
       const calendar_apps = await supabase
         .from("calendar_appointments")
         .select("status")
@@ -44,7 +43,7 @@ export async function POST(request: Request) {
         .eq("status", "accepted")
       if (calendar_apps?.error) throw calendar_apps.error;
       if (calendar_apps?.data && calendar_apps?.data.length > 0) {
-        return NextResponse.json({ status: 400, message: `Your haircut takes ${Number(time) * 30}min! Please choose a different time when the barber is more available!` });
+        return NextResponse.json({ status: 400, message: `Your haircut takes ${single_service.data?.time * 30}min! Please choose a different time when the barber is more available!` });
       }
 
       // Add 30mins
