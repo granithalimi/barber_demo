@@ -40,6 +40,7 @@ export default function Acalendar({ name, email }: Props) {
   const [time, setTime] = useState<string>("");
   const [barber, setBarber] = useState<string | null>();
   const [service, setService] = useState<string | null>();
+  const [lastTime, setLastTime] = useState<string | null>();
 
   const maxDate = new Date();
   maxDate.setMonth(maxDate.getMonth() + 2);
@@ -49,7 +50,7 @@ export default function Acalendar({ name, email }: Props) {
     const submitDate = date.toLocaleDateString("en-CA");
     const response = await fetch("/api/auth-book", {
       method: "POST",
-      body: JSON.stringify({ name, email, submitDate, barber, time, service }),
+      body: JSON.stringify({ name, email, submitDate, barber, time, service, lastTime }),
     });
 
     const data = await response.json();
@@ -153,6 +154,15 @@ export default function Acalendar({ name, email }: Props) {
     fetchData();
     fetchServices();
   }, [date, barber]);
+
+  // Only when times change set Last Time
+  useEffect(() => {
+    if (times && times.length > 0) {
+      setLastTime(times[times.length - 1]?.time);
+    }else{
+      setLastTime(undefined);
+    }
+  }, [times]);
 
   return (
     <div className="mt-10 flex flex-col items-center text-white">
