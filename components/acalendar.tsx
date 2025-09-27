@@ -33,6 +33,7 @@ export default function Acalendar({ name, email }: Props) {
   const [showMessage, setShowMessage] = useState<string>("");
   const [barbers, setBarbers] = useState<{ name: string; id: number }[]>();
   const [services, setServices] = useState<ProfileService[] | null>(null);
+  const [submitingStatus, setSubmitingStatus] = useState<boolean>(false);
   const router = useRouter();
 
   // Submiting Data
@@ -47,10 +48,20 @@ export default function Acalendar({ name, email }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitingStatus(true);
+
     const submitDate = date.toLocaleDateString("en-CA");
     const response = await fetch("/api/auth-book", {
       method: "POST",
-      body: JSON.stringify({ name, email, submitDate, barber, time, service, lastTime }),
+      body: JSON.stringify({
+        name,
+        email,
+        submitDate,
+        barber,
+        time,
+        service,
+        lastTime,
+      }),
     });
 
     const data = await response.json();
@@ -68,6 +79,7 @@ export default function Acalendar({ name, email }: Props) {
 
   const handleClose = () => {
     setShowMessage("");
+    setSubmitingStatus(false);
     if (
       showMessage ==
       "Appointment created successfully, We'll send you and email for approval✂️"
@@ -159,7 +171,7 @@ export default function Acalendar({ name, email }: Props) {
   useEffect(() => {
     if (times && times.length > 0) {
       setLastTime(times[times.length - 1]?.time);
-    }else{
+    } else {
       setLastTime(undefined);
     }
   }, [times]);
@@ -311,10 +323,10 @@ export default function Acalendar({ name, email }: Props) {
                 </h1>
               )}
               <button
-                className="bg-red-500 px-3 py-1 rounded-lg font-bold hover:bg-red-400 duration-300"
+                className={`${submitingStatus ? "bg-red-400" : "bg-red-500"} px-3 py-1 rounded-lg font-bold hover:bg-red-400 duration-300`}
                 type="submit"
               >
-                Submit
+                {submitingStatus ? "Submiting..." : "Submit"}
               </button>
             </div>
           </form>

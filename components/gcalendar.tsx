@@ -27,6 +27,7 @@ export default function Gcalendar() {
   const [showMessage, setShowMessage] = useState<string>("");
   const [barbers, setBarbers] = useState<{ name: string; id: number }[]>();
   const [services, setServices] = useState<ProfileService[] | null>(null);
+  const [submitingStatus, setSubmitingStatus] = useState<boolean>(false);
 
   // Submiting Data
   const [name, setName] = useState("");
@@ -42,6 +43,7 @@ export default function Gcalendar() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitingStatus(true)
 
     const submitDate = date.toLocaleDateString("en-CA");
     const response = await fetch("/api/guest-book", {
@@ -188,6 +190,7 @@ export default function Gcalendar() {
         <button
           className="bg-black text-white px-3 py-1 rounded-lg hover:bg-gray-900"
           onClick={() => {
+            setSubmitingStatus(false)
             setShowMessage("");
             if (
               showMessage ==
@@ -337,10 +340,10 @@ export default function Gcalendar() {
               )}
 
               <button
-                className="bg-red-500 px-3 py-1 rounded-lg font-bold hover:bg-red-400 duration-300"
+                className={`${submitingStatus ? "bg-red-400" : "bg-red-500"} px-3 py-1 rounded-lg font-bold hover:bg-red-400 duration-300`}
                 type="submit"
               >
-                Submit
+                {submitingStatus ? "Submiting..." : "Submit"}
               </button>
             </div>
           </form>
