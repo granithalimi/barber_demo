@@ -38,6 +38,8 @@ export default async function Page() {
           Users
           <Users />
         </Link>
+      </div>
+      <div className="flex justify-center gap-4 mt-3">
         <Link
           className="px-5 py-2 rounded-lg border border-white flex gap-1 hover:bg-white hover:text-black duration-300"
           href={"/services"}
