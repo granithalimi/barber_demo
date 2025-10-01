@@ -61,7 +61,7 @@ export default function Gallery() {
             <div>
               <div
                 ref={refGalleryContent}
-                className={`${inViewGalleryContent ? "show-text" : ""} hide-text3 mx-auto w-11/12 md:w-2/3 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 duration-500`}
+                className={`${inViewGalleryContent ? "show-text" : ""} hide-content mx-auto w-11/12 md:w-2/3 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 duration-500`}
               >
                 {imgs.map((i, ind) => (
                   <div key={ind} className="mb-1 cursor-default">

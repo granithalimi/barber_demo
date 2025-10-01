@@ -204,7 +204,7 @@
 .hide-content {
   opacity: 0;
   filter: blur(15px);
-  transform: translateY(30%);
+  transform: translateY(20%);
 }
 .show-text {
   opacity: 1;

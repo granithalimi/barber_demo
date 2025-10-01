@@ -39,6 +39,8 @@ export async function POST(request: Request) {
     });
   }
 
+  // check for other appointments to this barber!!!
+
   // update
   const { error } = await supabase
     .from("appointments")

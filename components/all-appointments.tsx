@@ -1,6 +1,7 @@
 "use client";
 
 import { formatDate } from "@/lib/helpers";
+import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 
 type Appointment = {
@@ -10,7 +11,7 @@ type Appointment = {
   status: string;
   name: string;
   email: string;
-  service: string;
+  services: { name: string };
   profiles: { name: string };
 };
 
@@ -45,7 +46,37 @@ export default function AllAppointments({
   };
 
   const handleAccept = async (id: number) => {
-    if (confirm("Are you sure you want to accept this Appointment?")) {
+    let message = "";
+    const supabase = createClient();
+    const { data } = await supabase
+      .from("calendar_appointments")
+      .select("date, time, barber_id")
+      .eq("app_id", id);
+
+    if (data && data.length > 0) {
+      const conditions = data
+        .map((dt) => `and(date.eq.${dt.date},time.eq.${dt.time})`)
+        .join(",");
+
+      const conflicts = await supabase
+        .from("calendar_appointments")
+        .select("appointments(name)")
+        .neq("app_id", id)
+        .eq("barber_id", data[0].barber_id)
+        .or(conditions);
+
+      if (conflicts.data && conflicts.data.length > 0) {
+        const names = conflicts.data?.map((c) => {
+            const appointment = c.appointments as unknown as { name: string };
+            return `'${appointment.name}'`;
+        }).join(", ");
+        message += `Accepting this will reject the appointments from: ${names}. Continue?`;
+      } else {
+        message = "Are you sure you want to accept this Appointment?";
+      }
+    }
+
+    if (confirm(message)) {
       try {
         const response = await fetch("/api/accept-appointment", {
           method: "POST",
@@ -81,7 +112,8 @@ export default function AllAppointments({
                   <span className="font-extrabold">Ora:</span> {a.time}
                 </p>
                 <p>
-                  <span className="font-extrabold">Service:</span> {a.service}
+                  <span className="font-extrabold">Service:</span>{" "}
+                  {a.services.name}
                 </p>
                 <p>
                   <span className="font-extrabold">Barber:</span>{" "}

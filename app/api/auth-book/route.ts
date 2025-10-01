@@ -26,7 +26,7 @@ export async function POST(request: Request) {
   const supabase = await createClient();
   const single_service = await supabase
     .from("services")
-    .select("name, time")
+    .select("time")
     .eq("id", service)
     .single();
 
@@ -74,7 +74,7 @@ export async function POST(request: Request) {
       name: name,
       email: email,
       barber_id: barber,
-      service: single_service.data?.name,
+      service_id: service,
     })
     .select();
 

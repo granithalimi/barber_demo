@@ -27,12 +27,12 @@ export default async function Page() {
     data?.role == "admin"
       ? await supabase
         .from("appointments")
-        .select("*, profiles(name)")
+        .select("*, profiles(name), services(name)")
         .order("date", { ascending: true })
         .order("time", { ascending: true })
       : await supabase
         .from("appointments")
-        .select("*, profiles(name)")
+        .select("*, profiles(name), services(name)")
         .eq("barber_id", data?.id)
         .order("date", { ascending: true })
         .order("time", { ascending: true });
@@ -42,12 +42,12 @@ export default async function Page() {
     data?.role == "admin"
       ? await supabase
         .from("appointments")
-        .select("*, profiles(name)")
+        .select("*, profiles(name), services(name)")
         .eq("date", today)
         .order("time", { ascending: true })
       : await supabase
         .from("appointments")
-        .select("*, profiles(name)")
+        .select("*, profiles(name), services(name)")
         .eq("date", today)
         .eq("barber_id", data?.id)
         .order("time", { ascending: true });
@@ -56,12 +56,12 @@ export default async function Page() {
     data?.role == "admin"
       ? await supabase
         .from("appointments")
-        .select("*, profiles(name)")
+        .select("*, profiles(name), services(name)")
         .lt("date", today)
         .order("time", { ascending: true })
       : await supabase
         .from("appointments")
-        .select("*, profiles(name)")
+        .select("*, profiles(name), services(name)")
         .lt("date", today)
         .eq("barber_id", data?.id)
         .order("time", { ascending: true });

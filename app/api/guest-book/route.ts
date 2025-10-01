@@ -24,7 +24,7 @@ export async function POST(request: Request) {
   }
 
   const supabase = await createClient();
-  const single_service = await supabase.from("services").select("name, time").eq("id", service).single()
+  const single_service = await supabase.from("services").select("time").eq("id", service).single()
 
   try {
     // Check TIME!!
@@ -62,7 +62,7 @@ export async function POST(request: Request) {
         name: name,
         email: email,
         barber_id: barber,
-        service: single_service.data?.name,
+        service_id: service,
       })
       .select();
     if (error) throw error;
