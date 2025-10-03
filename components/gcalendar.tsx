@@ -256,14 +256,13 @@ export default function Gcalendar() {
             {times && times.length > 0 && (
               <div className="grid grid-cols-3 gap-3">
                 {times.map((t, ind) => {
-                  if (t.status == "pending") {
+                  if (t.status == "accepted") {
                     return (
                       <button
-                        className={`${time == t.time ? "scale-110 bg-white text-black font-bold" : "hover:scale-110 hover:bg-white hover:text-black hover:font-bold"} 
-                    py-1 border border-white rounded-lg duration-300`}
+                        onClick={() => alert("This specific time is booked!")}
+                        className="py-1 rounded-lg bg-red-500"
                         type="button"
                         key={ind}
-                        onClick={() => handleButtonClick(t.time)}
                       >
                         {t.time.slice(0, 5)}
                       </button>
@@ -283,10 +282,11 @@ export default function Gcalendar() {
                   } else {
                     return (
                       <button
-                        onClick={() => alert("This specific time is booked!")}
-                        className="py-1 rounded-lg bg-red-500"
+                        className={`${time == t.time ? "scale-110 bg-white text-black font-bold" : "hover:scale-110 hover:bg-white hover:text-black hover:font-bold"} 
+                    py-1 border border-white rounded-lg duration-300`}
                         type="button"
                         key={ind}
+                        onClick={() => handleButtonClick(t.time)}
                       >
                         {t.time.slice(0, 5)}
                       </button>

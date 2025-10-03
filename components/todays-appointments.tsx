@@ -101,7 +101,7 @@ export default function TodaysAppointments({
           const formattedDate = formatDate(a.date);
           return (
             <div
-              className={`${a.status == "accepted" && "bg-green-500"} flex flex-col gap-3 p-5 rounded-lg border border-white text-base`}
+              className={`${a.status == "accepted" && "bg-green-500"} ${a.status == "rejected" && "bg-red-500"} flex flex-col gap-3 p-5 rounded-lg border border-white text-base`}
               key={ind}
             >
               <div className="flex-col md:gap-3">
@@ -122,7 +122,7 @@ export default function TodaysAppointments({
                 </p>
               </div>
               <div className="flex justify-center gap-1 md:gap-3 items-center">
-                {a.status != "accepted" && (
+                {(a.status != "accepted" && a.status != "rejected") && (
                   <button
                     className="px-2 py-1 rounded-lg text-base text-white bg-green-400 hover:bg-green-500 duration-300"
                     onClick={() => handleAccept(a.id)}

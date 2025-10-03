@@ -57,7 +57,34 @@ export async function POST(request: Request) {
   const calendar_apps = await supabase
     .from("calendar_appointments")
     .update({ status: "accepted" })
-    .eq("app_id", id);
+    .eq("app_id", id)
+    .select("date, time, barber_id");
+
+  if (calendar_apps.data && calendar_apps.data.length > 0) {
+    const conditions = calendar_apps.data
+      .map(dt => `and(date.eq.${dt.date},time.eq.${dt.time})`)
+      .join(",");
+
+    const conflicts = await supabase
+      .from("calendar_appointments")
+      .select("app_id")
+      .eq("barber_id", calendar_apps.data[0].barber_id)
+      .neq("app_id", id)
+      .or(conditions);
+
+    if (conflicts.data) {
+      const errr = await supabase
+        .from("appointments")
+        .delete()
+        .in(
+          "id",
+          conflicts.data?.flatMap((appointment) => appointment.app_id),
+        );
+      if (errr.error) console.log(errr.error);
+    }
+
+    if (conflicts.error) console.log(conflicts.error);
+  }
 
   if (calendar_apps.error) {
     return NextResponse.json({
