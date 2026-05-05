@@ -1,9 +1,53 @@
 "use client"
-
+import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
-export default function About() {
+function useCountUp(target: number, duration = 600, trigger = true) {
+  const [count, setCount] = useState(0);
 
+  useEffect(() => {
+    if (!trigger) return;
+    let startTime: number | null = null;
+
+    const tick = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 4); // easeOutQuart
+      setCount(Math.round(eased * target));
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+
+    requestAnimationFrame(tick);
+  }, [target, duration, trigger]);
+
+  return count;
+}
+
+function StatNumber({ target, suffix = "", trigger, duration }: { target: number; suffix?: string; trigger: boolean; duration:number; }) {
+  const count = useCountUp(target, duration, trigger);
+  return <>{count}{suffix}</>;
+}
+
+function StatDecimal({ target, trigger, duration }: { target: number; trigger: boolean; duration: number; }) {
+  const [val, setVal] = useState(0);
+
+  useEffect(() => {
+    if (!trigger) return;
+    let startTime: number | null = null;
+    const tick = (ts: number) => {
+      if (!startTime) startTime = ts;
+      const progress = Math.min((ts - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 4);
+      setVal(parseFloat((eased * target).toFixed(1)));
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, [target, trigger]);
+
+  return <>{val.toFixed(1)}</>;
+}
+
+export default function About() {
   const [refAboutTitle, inViewAboutTitle] = useInView({
     threshold: 1,
     triggerOnce: true,
@@ -28,6 +72,8 @@ export default function About() {
     threshold: 0,
     triggerOnce: true,
   });
+
+  
   return (
     <section id="about" className="py-20 bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -49,25 +95,25 @@ export default function About() {
             <div ref={refAboutContent} className={`${inViewAboutContent ? "show-text" : ""} hide-text3 text-white grid grid-cols-2 gap-6 duration-500`}>
               <div className="text-center">
                 <div className="text-3xl font-bold mb-2">
-                  13+
+                  <StatNumber target={13} suffix="+" trigger={inViewAboutContent} duration={1300} />
                 </div>
                 <div className="text-gray-400">Years Experience</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-barber-gold mb-2">
-                  10k+
+                  <StatNumber target={10} suffix="k+" trigger={inViewAboutContent} duration={1600} />
                 </div>
                 <div className="text-gray-400">Happy Clients</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-barber-gold mb-2">
-                  5
+                  <StatNumber target={5} suffix="+" trigger={inViewAboutContent} duration={1900}/>
                 </div>
                 <div className="text-gray-400">Expert Barbers</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-barber-gold mb-2">
-                  4.9
+                  <StatDecimal target={4.9} trigger={inViewAboutContent} duration={2100} />
                 </div>
                 <div className="text-gray-400">Star Rating</div>
               </div>

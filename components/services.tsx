@@ -67,7 +67,7 @@ export default function Services() {
                 </div>
                 <h3 className="text-xl font-semibold mb-4">{s.name}</h3>
                 <p className="text-gray-400 mb-4">Time: {s.time * 30}min</p>
-                <p className="text-barber-gold font-semibold">{s.price} Den</p>
+                <p className="text-barber-gold font-semibold mb-4">{s.price} Den</p>
               </div>
             ))}
           </div>
